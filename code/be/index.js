@@ -1,41 +1,25 @@
-var sql = require('mssql');
+var express = require('express');
+var cors=require("cors");
+var path = require('path');
 
-// var config = {  
-//     server: 'LAPTOP-32R6HKKQ\SQLEXPRESS',
+var Customer = require('./routes/customer');
+var Partner = require("./routes/partner");
+var app = express();
 
-//     userName: 'hieu1811', //update me
-//     password: 'd18112000',  //update me
-//     database:'QLVoucher',
-//    port:1433,
-//     options: {
-//         // If you are on Microsoft Azure, you need encryption:
-//         encrypt: true,
-//           //update me
-//         enableArithAbort: true
-//     }
-// };   `
-// const config: ConnectionConfig = {
-//   server: 'LAPTOP-32R6HKKQ\\SQLEXPRESS',
-//   user: 'hieu1811',
-//   password: 'd18112000',
-  
-//   "options": {
-//     "encrypt": true,
-//     "enableArithAbort": true
-//   }
-// };
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.listen(9000, ()=>{
+  console.log("running on port 9000");
+})
+
+app.use(express.json());
+app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
-
-const config = {
-server: 'LAPTOP-32R6HKKQ\\SQLEXPRESS',
-authentication: { type: 'default', options: { userName: 'hieu1811', password: 'd18112000' } },
-database:"QLVoucher",
-options: { encrypt:false,"enableArithAbort": true, port: 1433 }
-}
-
-
-sql.connect(config,(err,result)=>{
-  console.table(result)
-});
-
+app.use('/customer', Customer);
+app.use('/partner', Partner);
+// app.use('/users', usersRouter);
+// app.use("/testAPI",testAPIRouter);
