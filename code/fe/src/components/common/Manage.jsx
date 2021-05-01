@@ -30,15 +30,16 @@ export default function Manage() {
                 
             </div>
             <div style={{margin:'0 50px '}}>
-            <table className="table table-hover table-manage " style={{border:'0px'}}>
+            <table className="table  table-manage " style={{border:'0px'}}>
                 <thead className="table-primary">
                     <tr>
                     <th className="text-center" scope="col">Id</th>
+                    <th  className="text-center" scope="col">Hình</th>
                     <th className="text-center" scope="col">Loại Voucher</th>
                     <th className="text-center" scope="col">Tên Voucher</th>
                     <th className="text-center" scope="col">Giá Trị</th>
                     <th className="text-center" scope="col">Giá Cuối</th>
-                    <th  className="text-center" scope="col">Trạng thái</th>
+                   
                     </tr>
                 </thead>
                 <tbody>

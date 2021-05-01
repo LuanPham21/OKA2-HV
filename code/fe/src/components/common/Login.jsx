@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import {} from 'antd';
 import { Form, Input, Button, Checkbox } from 'antd';
 import {UserOutlined,LockOutlined} from '@ant-design/icons'
@@ -37,11 +38,14 @@ export default function Login() {
                     <div className="form-forget">
                         <a href="" >Quên mật khẩu ?</a>
                     </div>
-                    <Form.Item className="form-btn-login">
-                    <Button type="primary" htmlType="submit" className="login-form-button">
+                    <Form.Item className="form-btn-login" style={{padding:'0',margin:'0'}}>
+                    <Button type="primary" htmlType="submit" className="login-form-button" >
                     Đăng Nhập
                     </Button>
                     </Form.Item>
+                    <div className="form-register">
+                        <Link to='/signin' style={{textAlign:'center'}}>Đăng Ký Tài Khoản ?</Link>
+                    </div>
             </Form>
             </div>
         </div>

@@ -40,7 +40,7 @@ export default function Header() {
                 <a href="/save">Đã Lưu</a>
                 <a href="/book">Đặt Chỗ Của Tôi</a>
                 <Link to='/login' className="login" >Đăng Nhập</Link>
-                <Link to='/signin' className="register" >Đăng Kí</Link>
+                <Link to='/giohang' className="register" >Giỏ Hàng</Link>
             </div>
             
         </div>

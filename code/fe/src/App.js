@@ -14,6 +14,8 @@ import listRepair from './components/Page/listRepair';
 import NotFoundPage from './components/common/NotFoundPage';
 import Login from './components/common/Login';
 import SignIn from './components/common/SignIn';
+import ChiTiet from './components/common/ChiTiet';
+import GioHang from './components/common/GioHang';
 
 function App(){
       
@@ -27,13 +29,13 @@ function App(){
                 <Route path='/payment' component={listPayMent}/>
                 <Route path='/manage' component={listManage}/>
                 <Route path='/repair' component={Repair}/>
-                <Route path='/add' component={Add}/>
+                <Route path='/add' component={ChiTiet}/>
                 <Route path='/login' component={Login}/>
                 <Route path='/signin' component={SignIn}/>
                 <Route path='*' component={NotFoundPage}/>
 
             </Switch>
-            
+            {/* <GioHang/> */}
             {/* <div style={{height:'1000px'}}></div> */}
             
         </div>

@@ -22,12 +22,14 @@ export default function Part(state){
     return(
         <tr>
             <th className="text-center" scope="row" >1</th>
+            <td className="text-center">
+                <img src="./img/manager-1.jpg" style={{width:'50px',height:'50px'}}></img>
+            </td>
             <td className="text-center">loai vocher</td>
             <td className="text-center">ten voucher</td>
             <td className="text-center">giá</td>
             <td className="text-center">giá cuối</td>
-            <td className="text-center">Trạng thái</td>
-            <td style={{maxWidth: '60px'}}>
+            <td style={{maxWidth: '60px',borderTop:'none'}}>
                         <form action="/repair"> 
                             <button type="submit" className="btn btn-warning" onClick={()=>{
                                     Axios.post("http://localhost:9000/manage/preedit",{MaV:state.ma});

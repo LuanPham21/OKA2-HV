@@ -1,0 +1,23 @@
+.giohang-phai ul {
+    list-style:none
+}
+.giohang-sp span,.giohang-total span {
+    font-weight: bold;
+}
+.giohang-total span{
+    color:orange;
+}
+.btn-muahang{
+    border: none;
+    width:100%;
+    height:47px;
+    color:#fff;
+    background-color:orange;
+    font-weight:700;
+    font-size:15px;
+    transition: all .3s;
+}
+.btn-muahang:hover{
+    border: 1px #000 solid;
+
+}

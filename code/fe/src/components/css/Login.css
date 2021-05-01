@@ -57,7 +57,9 @@
 }
 
 .backgroud-all{
-
     background:#fff;
     
+}
+.form-register:hover{
+    opacity:0.8
 }
