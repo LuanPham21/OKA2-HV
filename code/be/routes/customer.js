@@ -63,8 +63,6 @@ app.post("/details_dc",(req,res)=>{
 });
 
 app.post("/details_dc",(req,res)=>{
-    
-    
     var str = "SELECT * FROM DieuKien Where MaVoucher='"+req.Ma+"'";  
     var request_1=new sql.Request();
     request_1.query(str,function(err,database){ 

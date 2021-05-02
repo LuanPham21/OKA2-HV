@@ -2,10 +2,8 @@ import React ,{useState}from 'react';
 import '../css/ChiTiet.css'
 import { Form, Input, Button,Select, DatePicker,Checkbox} from 'antd';
 import CurrencyInput from 'react-currency-input-field';
-import DieuKien from './DieuKien';
-import Popup from './Popup';
 import DiaDiem from './Checkbox';
-export default function ChiTiet() {
+export default function Edit() {
     const [image,setImage]=useState('/img/manager-1.jpg');
     const onImageChange = (e) =>{
         if(e.target.files && e.target.files[0]){
@@ -15,38 +13,9 @@ export default function ChiTiet() {
         }
     }
     const [openPopup,setOpenPopup]=useState(false);
-    const [option,setOption]=useState([
-        {
-            id:1,
-            title:'vũng tàu',
-        },
-        {
-            id:2,
-            title:'đà lạt',
-        },
-
-    ])
-    const [text,setText]=useState('');
-    const onChangeText = (e)=>{
-        setText(e.target.value);
-    }
-    const addOption = (e) =>{
-        const newOption = 
-            [
-                ...option,
-                {
-                    id:4,
-                    title:text,
-                }
-
-            ]
-            setOption(newOption);
-            setText('');
-    }
-    
-    const { RangePicker } = DatePicker;
     return (
         <div style={{marginTop:'30px'}}>
+            <h1 style={{textAlign:'center',fontWeight:'bold',textTransform:'uppercase'}}>Sửa Voucher</h1>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-3">
@@ -172,17 +141,11 @@ export default function ChiTiet() {
                 </Form.Item>
                 <Form.Item className="form-btn-login">
                 <Button type="primary" htmlType="submit" className="btn--them text-right btn btn-primary" >
-                Thêm
+                Sửa
                 </Button>
                 </Form.Item>
             </Form>
-             <Popup 
-              openPopup={openPopup} 
-              setOpenPopup={setOpenPopup}
-              title = 'Điều Kiện'
-            >
-                <DieuKien/>
-            </Popup>
+
                         
                     </div>
                     

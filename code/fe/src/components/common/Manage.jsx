@@ -34,7 +34,7 @@ export default function Manage() {
                 <thead className="table-primary">
                     <tr>
                     <th className="text-center" scope="col">Id</th>
-                    <th  className="text-center" scope="col">Hình</th>
+                    <th className="text-center" scope="col">Hình</th>
                     <th className="text-center" scope="col">Loại Voucher</th>
                     <th className="text-center" scope="col">Tên Voucher</th>
                     <th className="text-center" scope="col">Giá Trị</th>

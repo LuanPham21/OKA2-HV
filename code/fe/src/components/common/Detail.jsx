@@ -1,71 +1,111 @@
-import React, { useEffect, useState } from 'react'
-import '../css/Detail.css'
-import { EnvironmentOutlined } from '@ant-design/icons';
-import Axios from 'axios';
-var CurrencyFormat = require('react-currency-format');
-
+import React from 'react';
+import '../css/ChiTiet.css'
+import { Form, Input, Button,Select, DatePicker,Checkbox} from 'antd';
+import CurrencyInput from 'react-currency-input-field';
+import DieuKien from './DieuKien';
+import Popup from './Popup';
+import DiaDiem from './Checkbox';
 export default function Detail() {
-    const [listV,setV]=useState([])
-    const [listdk,setdk]=useState([])
-
-    
-    useEffect(()=>{
-        Axios.get("http://localhost:9000/detailvoucher").then((respone)=>{
-        console.log(respone.data);
-        setV(respone.data);
-    })
-        Axios.get("http://localhost:9000/detailvoucher_dk").then((respone)=>{
-        console.log(respone.data);
-        setdk(respone.data);
-        
-    })
-    },[])
-    const demo = listV[0];
-    console.log(demo)
-    // console.log(Object.values(demo));
-
     
     return (
-        <div className="square_all_1">
-             <div className="square_header">
- 
-                {listV.map((val)=>{
-                    return <h3 className="title">{val.TenVoucher}</h3>                            
-                })}
-                {listV.map((val)=>{
-                    return <p className="desc">{val.MaLoaiVoucher}</p>                       
-                })}
-                {listV.map((val)=>{
-                    return <p className="location"><EnvironmentOutlined/>{val.DiaDiem} </p>               
-                })}
-                 <hr/>
-             </div>
-          
-             <div className="square_body" >
-                    <div className="body_hinh" >
-                         {listV.map((val)=>{
-                        return <p className="location"><img src={val.Hinh} alt="hinh"/></p>               
-                         })}
+        <div style={{marginTop:'30px'}}>
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-3">
+                        <div class="col--detail--1">
+                        <img src="/img/manager-1.jpg" />    
+                        </div>
                     </div>
-                    <div className="body_dieukien" style={{display:'flex',flexDirection:'column',width:'100%'}}>
-                        <h5 style={{margin:'10px'}} >Điều kiện</h5>
-                        <ul className="dieukien" style={{alignSelf:'flex-start',minHeight:'55%'}}>
-                            {listdk.map((val)=>{
-                                return <li >{val.TenDieuKien}</li>               
-                            })}
-                        </ul>
-                        <div className="body_price" style={{alignSelf:'flex-end',marginRight:'10px',minHeight:'20%',marginBottom:'0px'}}>
-                             {listV.map((val)=>{
-                                return <p className="price"><CurrencyFormat value={val.DonGia} displayType={'text'} thousandSeparator={true} /> VNĐ </p>               
-                            })}
-                        <form action="/payment">
-                            <button type="submit" className="btn-mua">Mua</button>
-                        </form>
-                        </div>  
+                    <div className="col-lg-8 ">
+                    <Form 
+            name="normal_login"
+            // initialValues={{ remember: true }}
+            // onFinish={onFinish}
+            className="col-lg-8-detalis"
+            >
+                
+                <Form.Item
+                    name="tenVoucher"
+                    rules={[
+                        { required: true, message: 'Không được bỏ trống tên voucher' },
+                    ]}
+                    label="Tên Voucher"
+                    className="form__row"
+                >
+                <p>Tên Voucher</p>
+                </Form.Item>
+                <Form.Item 
+                label="Loại Voucher" 
+                name="select"
+                rules={[
+                    { required: true, message: 'Không được bỏ trống loại voucher' },
+                ]}
+                className="form__row"
+                >
+                  <p>Loại Voucher</p>
+                </Form.Item>
+                <Form.Item label="Điều kiện" name="dieukien"  className="form__row">
+                    <p>Điều Kiện</p>
+                </Form.Item>
+                <Form.Item
+                    name="diadiem"
+                    rules={[
+                        // { required: true, message: 'Không được bỏ trống địa điểm' },
+                    ]}
+                    label="Địa Điểm"
+                    className="form__row"
+                >
+                   <p>Địa Điểm</p>
+                    
+                </Form.Item>
+                <Form.Item
+                    name="gia"
+                    rules={[
+                        { required: true, message: 'Không được bỏ trống giá voucher' },
+                    ]}
+                    label="Giá"
+                    className="form__row"
+                >
+                   <p>Giá</p>
+                </Form.Item>
+                <Form.Item
+                    name="trigia"
+                    rules={[
+                        { required: true, message: 'Không được bỏ trống phần trăm giá' },
+                    ]}
+                    label="Phần Trăm Giá"
+                    className="form__row"
+                >
+                   <p>Giá Trị</p>
+                </Form.Item>
+                <Form.Item
+                    name="ngaybd"
+                    rules={[
+                        { required: true, message: 'Không được bỏ trống ngày bắt đầu' },
+                    ]}
+                    label="Ngày Bắt Đầu"
+                    className="form__row"
+                >
+                    {/* <RangePicker /> */}
+                   <p>Ngày bắt đầu</p>
+                </Form.Item>
+                <Form.Item
+                    name="ngaykt"
+                    rules={[
+                        { required: true, message: 'Không được bỏ trống ngày bắt đầu' },
+                    ]}
+                    label="Ngày Kết Thúc"
+                    className="form__row"
+                >
+                   <p>Ngày kết thúc</p>
+                   
+                </Form.Item>
+            </Form>
+                        
                     </div>
-                          
-             </div>
-               
-          </div>
+                    
+                </div>
+            </div>
+        </div>
     )
-}  
+}

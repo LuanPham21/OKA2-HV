@@ -1,34 +1,51 @@
-import React, { useState, useEffect } from 'react'
-import '../css/Add.css';
+import React ,{useState}from 'react';
+import '../css/ChiTiet.css'
+import { Form, Input, Button,Select, DatePicker,Checkbox, InputNumber} from 'antd';
 import CurrencyInput from 'react-currency-input-field';
 import DieuKien from './DieuKien';
 import Popup from './Popup';
-// import Select from 'react-select'
-// import Select from 'react-select';
-import Axios from 'axios'
-import { Form, Input, Button,Select,DatePicker } from 'antd';
-
-
+import DiaDiem from './Checkbox';
 export default function Add() {
-    const [openPopup,setOpenPopup]=useState(false);
+    const [text,setText]=useState('');
+    const onChangeGia = (e) =>{
+        const value = e.target.value;
+        setText(value)
+    }
+    const [image,setImage]=useState('/img/manager-1.jpg');
+    const onImageChange = (e) =>{
+        if(e.target.files && e.target.files[0]){
+            let img = e.target.files[0];
+            setImage(URL.createObjectURL(img))
+            
+        }
+    }
+
+    
     return (
-       <div className="container">
-           <Form 
+        <div style={{marginTop:'30px'}}>
+            <h1 style={{textAlign:'center',fontWeight:'bold',textTransform:'uppercase'}}>Thêm Voucher</h1>
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-3">
+                        <div class="col--detail--1">
+                        <img src={image}  />
+                        {/* <h1>Select Image</h1> */}
+                        <input type="file" name="myImage" onChange={onImageChange} style={{marginTop:'10px',cursor: 'pointer'}} />
+                        </div>
+                    </div>
+                    <div className="col-lg-8 ">
+                    <Form 
             name="normal_login"
-            className=" all--form"
             // initialValues={{ remember: true }}
             // onFinish={onFinish}
+            className="col-lg-8-detalis"
             >
-                <h1 style={{textAlign:'center'}}>Thêm Voucher</h1>
                 <Form.Item
                     name="maVoucher"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống mã voucher' },
-                    ]}
                     label="Mã Voucher"
                     className="form__row"
                 >
-                <Input  placeholder="Nhập Mã Voucher ('MV...')..."  className="form__input" />
+                <Input  placeholder="Nhập Mã Voucher ('MV...')..."  className="form__input" disabled />
                 </Form.Item>
                 <Form.Item
                     name="tenVoucher"
@@ -52,51 +69,87 @@ export default function Add() {
                         <Select.Option value="demo">Demo</Select.Option>
                     </Select>
                 </Form.Item>
-                <Form.Item label="Điều kiện" name="dieukien"  className="form__row"  onClick={() => setOpenPopup(true)}>
-                <Button  >
-                    ...
-                </Button>
-                </Form.Item>
+                {/* <Form.Item label="Điều kiện" name="dieukien"  className="form__row">
+                    <Checkbox.Group>
+                        <div>
+                            <Checkbox  name="option_1" value="A" style={{ lineHeight: '32px' } } >
+                            <Form.Item label="Điều kiện" name="dieukien">
+                                <Input label="Loại" name="input_1" ></Input>
+                            </Form.Item>
+                                
+                            </Checkbox> 
+                        </div>
+                        <div>
+                            <Checkbox name="option" value="B" style={{ lineHeight: '32px' }}>B</Checkbox>
+                        </div>
+                        <div>
+                            <Checkbox name="option" value="C" style={{ lineHeight: '32px' }}>C</Checkbox>
+                        </div>
+                        <div>
+                            <Checkbox name="option" value="D" style={{ lineHeight: '32px' }}>D</Checkbox>
+                        </div>
+                        <div>
+                            <Checkbox name="option" value="E" style={{ lineHeight: '32px' }}>E</Checkbox>
+                        </div>
+                        <div>
+                            <Checkbox name="option" value="F" style={{ lineHeight: '32px' }}>F</Checkbox>
+                        </div>
+                    </Checkbox.Group>
+                </Form.Item> */}
                 <Form.Item
                     name="diadiem"
                     rules={[
-                        { required: true, message: 'Không được bỏ trống địa điểm' },
+                        { required: true, message: 'Chọn ít nhất 1 địa điểm áp dụng' },
                     ]}
-                    label="Địa Điểm"
+                    label="Địa Điểm:"
                     className="form__row"
                 >
-                <Input  placeholder="Nhập Địa Điểm ..."  />
+                    
+                    <Checkbox.Group>
+                        
+                    </Checkbox.Group>
+                    
                 </Form.Item>
                 <Form.Item
                     name="gia"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống giá voucher' },
-                    ]}
+                   
                     label="Giá"
                     className="form__row"
                 >
-                   <CurrencyInput id="input-example"className="form__input" placeholder="Nhập Giá ..." style={{color:'rgba(0, 0, 0, 0.85)',padding:'0 11px',outline:'none'}}  suffix="VNĐ"/><p style={{display:'none'}}>;</p>
+                
+                   <InputNumber
+                        defaultValue={1000000}
+                        min={1}
+                        style={{color:'rgba(0, 0, 0, 0.85)',padding:'0 11px',outline:'none',width:'488px'}}
+                        formatter={value => ` ${value} VND`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                        
+                    /> 
                 </Form.Item>
                 <Form.Item
                     name="trigia"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống phần trăm giá' },
-                    ]}
+                
+        
+                                
+                        
+
+                   
                     label="Phần Trăm Giá"
                     className="form__row"
                 >
-                   <CurrencyInput id="input-example" className="form__input" placeholder="Nhập Phần Trăm Giá ..." style={{color:'rgba(0, 0, 0, 0.85)',padding:'0 11px',outline:'none'}}  suffix="%"/><p style={{display:'none'}}>;</p>
+                    <InputNumber
+
+                        style={{color:'rgba(0, 0, 0, 0.85)',padding:'0 11px',outline:'none',width:'488px'}}
+
+                        defaultValue={100}
+                        min={0}
+                        max={100}
+                        formatter={value => `${value}%`}
+                        parser={value => value.replace('%', '')}
+                        x
+                    />
                 </Form.Item>
-                <Form.Item
-                    name="hinh"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống hình' },
-                    ]}
-                    label="Hình"
-                    className="form__row"
-                >
-                   <Input placeholder="Nhập Hình..."/>
-                </Form.Item>
+                
                 <Form.Item
                     name="ngaybd"
                     rules={[
@@ -105,6 +158,7 @@ export default function Add() {
                     label="Ngày Bắt Đầu"
                     className="form__row"
                 >
+                    {/* <RangePicker /> */}
                    <DatePicker placeholder="Nhập Ngày Bắt Đầu..." className="form__input"/>
                 </Form.Item>
                 <Form.Item
@@ -123,13 +177,11 @@ export default function Add() {
                 </Button>
                 </Form.Item>
             </Form>
-             <Popup 
-              openPopup={openPopup} 
-              setOpenPopup={setOpenPopup}
-              title = 'Điều Kiện'
-            >
-                <DieuKien/>
-            </Popup>
+     
+                    </div>
+                    
+                </div>
+            </div>
         </div>
     )
 }
