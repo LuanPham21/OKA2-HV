@@ -5,6 +5,9 @@ import CurrencyInput from 'react-currency-input-field';
 import DieuKien from './DieuKien';
 import Popup from './Popup';
 import DiaDiem from './Checkbox';
+import {getCurrentDate} from './utils'
+
+
 export default function Add() {
     const [text,setText]=useState('');
     const onChangeGia = (e) =>{
@@ -20,6 +23,7 @@ export default function Add() {
         }
     }
 
+    const {RangePicker} = DatePicker;
     
     return (
         <div style={{marginTop:'30px'}}>
@@ -122,8 +126,8 @@ export default function Add() {
                         min={1}
                         style={{color:'rgba(0, 0, 0, 0.85)',padding:'0 11px',outline:'none',width:'488px'}}
                         formatter={value => ` ${value} VND`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                        
+                        parser={value => value.replace(/\VND\s?|(,*)/g, '')}
+                        suffix="VNĐ"
                     /> 
                 </Form.Item>
                 <Form.Item
@@ -141,36 +145,49 @@ export default function Add() {
 
                         style={{color:'rgba(0, 0, 0, 0.85)',padding:'0 11px',outline:'none',width:'488px'}}
 
-                        defaultValue={100}
-                        min={0}
-                        max={100}
+                        defaultValue={10}
+                        min={10}
+                        max={90}
                         formatter={value => `${value}%`}
                         parser={value => value.replace('%', '')}
-                        x
+                        
                     />
                 </Form.Item>
-                
                 <Form.Item
-                    name="ngaybd"
+                    name="khoangtg"
+                    
                     rules={[
-                        { required: true, message: 'Không được bỏ trống ngày bắt đầu' },
+                        { required: true, message: 'Không được bỏ trống khoảng thời gian hiệu lực' },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                              if (!value || getFieldValue('ngaykt') >= value) {
+                                return Promise.resolve();
+                              }
+                              return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                            },
+                          }),
                     ]}
-                    label="Ngày Bắt Đầu"
+                    label="Thời gian hữu hi"
                     className="form__row"
                 >
                     {/* <RangePicker /> */}
-                   <DatePicker placeholder="Nhập Ngày Bắt Đầu..." className="form__input"/>
+                    {/* <RangePicker renderExtraFooter={() => 'extra footer'} className='form__input'   /> */}
+                    <DatePicker placeholder="Nhập Ngày Kết Thúc..." className="form__input"/>
                 </Form.Item>
                 <Form.Item
                     name="ngaykt"
                     rules={[
-                        { required: true, message: 'Không được bỏ trống ngày bắt đầu' },
+                        { required: true, message: 'Không được bỏ trống ngày bắt đầu' },    
+                        
+                            
+                         
                     ]}
                     label="Ngày Kết Thúc"
                     className="form__row"
                 >
                    <DatePicker placeholder="Nhập Ngày Kết Thúc..." className="form__input"/>
                 </Form.Item>
+                
                 <Form.Item className="form-btn-login">
                 <Button type="primary" htmlType="submit" className="btn--them text-right btn btn-primary" >
                 Thêm

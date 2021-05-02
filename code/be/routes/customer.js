@@ -33,8 +33,8 @@ app.get("/list",(req,res)=>{
         request.query(str,function(err,database){
             if(database.recordset[0].NgayBatDau<today)
             {
-                console.table(database.recordset)
-                res.send(today)
+                console.log(database)
+                res.send(database.recordset)
             }
             
             // console.log(today_1);
