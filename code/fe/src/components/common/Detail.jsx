@@ -6,7 +6,7 @@ import Popup from './Popup';
 import React,{useEffect,useState} from 'react'
 import Axios from 'axios'
 import DiaDiem from './Checkbox';
-
+import dateFormat from 'dateformat'
 var CurrencyFormat = require('react-currency-format');
 export default function Detail(props) {
     const {id}=props.match.params;
@@ -47,7 +47,8 @@ export default function Detail(props) {
                     <div className="col-lg-9">
                         
                         <p className="detail-ten">{Detail.TenVoucher} giảm ngay {Detail.GiaTriSuDung}%</p>
-                        <p className="detail-loai">{Detail.LoaiVoucher}</p>
+                        <p className="detail-tloai">{Detail.MaLoaiVoucher}</p>
+                        <p className="detail-dieukien">Hạn sử dụng:        {dateFormat(Detail.NgayBatDau, 'dd/mm/yyyy')} - {dateFormat(Detail.NgayKetThuc, 'dd/mm/yyyy')}</p>
                         <p className="detail-gia">Giá: <CurrencyFormat value={Detail.GiaTien} displayType={'text'} thousandSeparator={true} /> VNĐ</p>
                         <Form.Item
                             className="form__row"

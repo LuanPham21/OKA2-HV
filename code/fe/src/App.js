@@ -11,6 +11,7 @@ import listPayMent from './components/Page/listPayMent';
 import NotFoundPage from './components/common/NotFoundPage';
 import Login from './components/common/Login';
 import SignIn from './components/common/SignIn';
+import Footer from './components/common/Footer';
 import Add from './components/common/Add';
 import Manage from './components/common/Manage';
 
@@ -18,7 +19,7 @@ import Manage from './components/common/Manage';
 function App(){
       
       return (
-        <div>
+        <div className="main">
             <Header/>
             <Navigation/> 
             <Switch>
@@ -33,8 +34,10 @@ function App(){
                 <Route path='*' component={NotFoundPage}/>
 
             </Switch>
+            <div style={{height:'80px'}}></div>
+            {/* <Footer/> */}
             {/* <GioHang/> */}
-            <div style={{height:'20px'}}></div>
+            
             
         </div>
       );

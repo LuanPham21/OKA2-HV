@@ -13,7 +13,8 @@
     background-color: rgb(236, 228, 228);
 }
 .detail-loai,.detail-dieukien,.detail-apdung{
-    font-size: 15px;
+    font-size: 14px;
+    font-weight:550;
 }
 .detail-loai{
     opacity:0.6;
@@ -22,7 +23,7 @@
 }
 .detail-btn-mua{
     width:180px;
-    
+    font-weight:350;
     margin-bottom: 20px;
     border:none;
     background:#ee4d2d;
@@ -36,4 +37,13 @@
 }
 .detail-img{
     margin:auto;
+}
+.detail-tloai{
+    background-color: #1ba0e2;
+    color: #fff;
+    padding: 3px 16px;
+    margin-left: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    display: inline-block;
 }
