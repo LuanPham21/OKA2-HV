@@ -1,6 +1,6 @@
-import React ,{useState}from 'react';
+import React ,{useState,useEffect}from 'react';
 import '../css/ChiTiet.css'
-import { Form, Input, Button,Select, DatePicker,Checkbox, InputNumber} from 'antd';
+import { Form, Input, Button,Select, DatePicker,Checkbox, InputNumber, Space} from 'antd';
 import CurrencyInput from 'react-currency-input-field';
 import DieuKien from './DieuKien';
 import Popup from './Popup';
@@ -9,11 +9,34 @@ import {getCurrentDate} from './utils'
 
 
 export default function Add() {
+
+    const [ttdieukien,setttDieukien]=useState(false)
+    const [dieukien,setDieukien]=useState('')
+
+    const [ttdieukien_1,setttDieukien_1]=useState(false)
+    const [dieukien_1,setDieukien_1]=useState('')
+
+    const [form] = Form.useForm();
+
     const [text,setText]=useState('');
     const onChangeGia = (e) =>{
         const value = e.target.value;
-        setText(value)
-    }
+        setText(value);
+        console.log(value)
+        form.setFieldsValue({
+            gia:value
+        });
+        
+    };
+
+
+
+    
+
+    
+      
+
+    
     const [image,setImage]=useState('/img/manager-1.jpg');
     const onImageChange = (e) =>{
         if(e.target.files && e.target.files[0]){
@@ -21,6 +44,15 @@ export default function Add() {
             setImage(URL.createObjectURL(img))
             
         }
+    }
+
+    const onChange =(e)=>{
+        setDieukien(e.target.value)
+        console.log(dieukien)
+    }
+    const onChange_1 =(e)=>{
+        setDieukien_1(e.target.value)
+        console.log(dieukien_1)
     }
 
     const {RangePicker} = DatePicker;
@@ -39,10 +71,12 @@ export default function Add() {
                     </div>
                     <div className="col-lg-8 ">
                     <Form 
-            name="normal_login"
-            // initialValues={{ remember: true }}
-            // onFinish={onFinish}
-            className="col-lg-8-detalis"
+                        form={form}
+                        name="normal_login"
+                        // initialValues={{ remember: true }}
+                        // onFinish={onFinish}
+                        className="col-lg-8-detalis"
+                        
             >
                 <Form.Item
                     name="maVoucher"
@@ -73,33 +107,42 @@ export default function Add() {
                         <Select.Option value="demo">Demo</Select.Option>
                     </Select>
                 </Form.Item>
-                {/* <Form.Item label="Điều kiện" name="dieukien"  className="form__row">
-                    <Checkbox.Group>
-                        <div>
-                            <Checkbox  name="option_1" value="A" style={{ lineHeight: '32px' } } >
-                            <Form.Item label="Điều kiện" name="dieukien">
-                                <Input label="Loại" name="input_1" ></Input>
-                            </Form.Item>
-                                
-                            </Checkbox> 
-                        </div>
-                        <div>
-                            <Checkbox name="option" value="B" style={{ lineHeight: '32px' }}>B</Checkbox>
-                        </div>
-                        <div>
-                            <Checkbox name="option" value="C" style={{ lineHeight: '32px' }}>C</Checkbox>
-                        </div>
-                        <div>
-                            <Checkbox name="option" value="D" style={{ lineHeight: '32px' }}>D</Checkbox>
-                        </div>
-                        <div>
-                            <Checkbox name="option" value="E" style={{ lineHeight: '32px' }}>E</Checkbox>
-                        </div>
-                        <div>
-                            <Checkbox name="option" value="F" style={{ lineHeight: '32px' }}>F</Checkbox>
-                        </div>
-                    </Checkbox.Group>
-                </Form.Item> */}
+                
+                <Form.Item
+                    name="dieu kien"
+                    label="dieu kien"
+                    rules={[
+                        { }, 
+                        {
+                            validator(_,value) {
+                              if (( dieukien===''&&ttdieukien===true)||( dieukien===null&&ttdieukien===true)||( dieukien_1===''&&ttdieukien_1===true)||( dieukien_1===null&&ttdieukien_1===true)) {
+                                return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                              }
+                              return Promise.resolve();
+                            },
+                        }
+                                    
+                    ]}
+                    className="form__row"
+                    // style={{width:'120px'}}
+                >
+                    <Space direction="vertical">
+                        <Space>
+                            <Checkbox id="dieukien" value="A" onClick={()=>setttDieukien(!ttdieukien)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
+                            <Input type="text" id="dk_1" disabled={!(ttdieukien)} defaultValue={dieukien} style={{width:100},{justifySelf:'center'}} onChange={onChange}></Input>  
+                        </Space>       
+                        <Space>
+                            <Checkbox id="dieukien_1" value="B" onClick={()=>setttDieukien_1(!ttdieukien_1)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
+                            <Input type="text" id="dk_2" disabled={!(ttdieukien_1)} defaultValue={dieukien_1} style={{width:100},{justifySelf:'center'}} onChange={onChange_1}></Input>
+
+                        </Space>              
+                    </Space>
+                    
+                    
+                    
+                </Form.Item>
+
+
                 <Form.Item
                     name="diadiem"
                     rules={[
@@ -116,19 +159,17 @@ export default function Add() {
                 </Form.Item>
                 <Form.Item
                     name="gia"
-                   
+                    rules={[
+                        {required:true,message:"a"},
+                        
+                    ]}
                     label="Giá"
                     className="form__row"
+                    initialValue={text}
+                    
                 >
                 
-                   <InputNumber
-                        defaultValue={1000000}
-                        min={1}
-                        style={{color:'rgba(0, 0, 0, 0.85)',padding:'0 11px',outline:'none',width:'488px'}}
-                        formatter={value => ` ${value} VND`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        parser={value => value.replace(/\VND\s?|(,*)/g, '')}
-                        suffix="VNĐ"
-                    /> 
+                   <CurrencyInput id="id_input_1" className="form__input" onChange={onChangeGia}/><p>;</p>
                 </Form.Item>
                 <Form.Item
                     name="trigia"
