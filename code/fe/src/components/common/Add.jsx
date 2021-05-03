@@ -18,9 +18,9 @@ export default function Add() {
 
     const [form] = Form.useForm();
 
-    const [text,setText]=useState('');
+    const [text,setText]=useState(0);
     const onChangeGia = (e) =>{
-        const value = e.target.value;
+        const value = Number(e.target.value.replace(/\ VNĐ\s?|(,*)/g, ''));
         setText(value);
         console.log(value)
         form.setFieldsValue({
@@ -29,10 +29,26 @@ export default function Add() {
         
     };
 
+    const [textTriGIa,setTextTriGia]=useState(0);
+    const onChangeTriGia =(e)=>{
+        const value = Number(e.target.value.replace(/\ %\s?|(,*)/g, ''));
+        setTextTriGia(value);
+        console.log(value)
+        form.setFieldsValue({
+            trigia:value
+        });
+    }
+
 
 
     
-
+    const onFinish = (values) => {
+        console.log('Success:', values);
+      };
+    
+      const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+      };
     
       
 
@@ -42,7 +58,7 @@ export default function Add() {
         if(e.target.files && e.target.files[0]){
             let img = e.target.files[0];
             setImage(URL.createObjectURL(img))
-            kjhgkj
+
         }
     }
 
@@ -73,8 +89,8 @@ export default function Add() {
                     <Form 
                         form={form}
                         name="normal_login"
-                        // initialValues={{ remember: true }}
-                        // onFinish={onFinish}
+                            onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
                         className="col-lg-8-detalis"
                         
             >
@@ -160,55 +176,61 @@ export default function Add() {
                 <Form.Item
                     name="gia"
                     rules={[
-                        {required:true,message:"a"},
+                        { validator(_,value){
+                            if(value===0||value==null||value=='')
+                            {
+                            return Promise.reject(new Error('Không được bỏ trống Trị Giá'));
+                            }
+                            return Promise.resolve();
+                            
+                        }},
                         
                     ]}
                     label="Giá"
                     className="form__row"
-                    initialValue={text}
+             
                     
                 >
-                
-                   <CurrencyInput id="id_input_1" className="form__input" onChange={onChangeGia}/><p>;</p>
+                   <CurrencyInput id="id_input_1" className="form__input" suffix=" VNĐ"  onChange={onChangeGia}/><p style={{display:'none'}}>;</p>
                 </Form.Item>
                 <Form.Item
                     name="trigia"
-                
-        
-                                
-                        
-
-                   
                     label="Phần Trăm Giá"
                     className="form__row"
-                >
-                    <InputNumber
-
-                        style={{color:'rgba(0, 0, 0, 0.85)',padding:'0 11px',outline:'none',width:'488px'}}
-
-                        defaultValue={10}
-                        min={10}
-                        max={90}
-                        formatter={value => `${value}%`}
-                        parser={value => value.replace('%', '')}
+                    
+                    rules={[
+                        { validator(_,value){
+                            if(value===0||value==null||value=='')
+                            {
+                            return Promise.reject(new Error('Không được bỏ trống Giá'));
+                            }
+                            return Promise.resolve();
+                            
+                        },required:true},
                         
-                    />
+                    ]}
+                >
+                    <CurrencyInput id="id_input" className="form__input" suffix=" %"  onChange={onChangeTriGia}/><p style={{display:'none'}}>;</p>
                 </Form.Item>
                 <Form.Item
-                    name="khoangtg"
+                    name="ngaybd"
                     
                     rules={[
                         { required: true, message: 'Không được bỏ trống khoảng thời gian hiệu lực' },
                         ({ getFieldValue }) => ({
                             validator(_, value) {
-                              if (!value || getFieldValue('ngaykt') >= value) {
+                                if(getFieldValue('ngaykt') != null)
+                                {
+                                    if (!value || getFieldValue('ngaykt') >= value) {
+                                        return Promise.resolve();
+                                      }
+                                      return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                }
                                 return Promise.resolve();
-                              }
-                              return Promise.reject(new Error('The two passwords that you entered do not match!'));
                             },
                           }),
                     ]}
-                    label="Thời gian hữu hi"
+                    label="Ngày bắt đầu"
                     className="form__row"
                 >
                     {/* <RangePicker /> */}
@@ -219,7 +241,18 @@ export default function Add() {
                     name="ngaykt"
                     rules={[
                         { required: true, message: 'Không được bỏ trống ngày bắt đầu' },    
-                        
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if(getFieldValue('ngaybd') != null)
+                                {
+                                    if (!value || getFieldValue('ngaybd') <= value) {
+                                        return Promise.resolve();
+                                      }
+                                      return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                }
+                                return Promise.resolve();
+                            },
+                          }),
                             
                          
                     ]}
