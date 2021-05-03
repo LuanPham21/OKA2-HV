@@ -28,6 +28,7 @@ export default function Add() {
         });
         
     };
+<<<<<<< HEAD
 
     const [textTriGIa,setTextTriGia]=useState(0);
     const onChangeTriGia =(e)=>{
@@ -53,12 +54,18 @@ export default function Add() {
       
 
     
+=======
+>>>>>>> ea2543355a798b04dd5bc0de66511e278662e58c
     const [image,setImage]=useState('/img/manager-1.jpg');
     const onImageChange = (e) =>{
         if(e.target.files && e.target.files[0]){
             let img = e.target.files[0];
             setImage(URL.createObjectURL(img))
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> ea2543355a798b04dd5bc0de66511e278662e58c
         }
     }
 
