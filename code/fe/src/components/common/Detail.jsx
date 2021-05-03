@@ -1,109 +1,91 @@
-import React from 'react';
-import '../css/ChiTiet.css'
+import '../css/Detail.css'
 import { Form, Input, Button,Select, DatePicker,Checkbox} from 'antd';
 import CurrencyInput from 'react-currency-input-field';
 import DieuKien from './DieuKien';
 import Popup from './Popup';
+import React,{useEffect,useState} from 'react'
+import Axios from 'axios'
 import DiaDiem from './Checkbox';
-export default function Detail() {
-    
+
+var CurrencyFormat = require('react-currency-format');
+export default function Detail(props) {
+    const {id}=props.match.params;
+    const [Detail,setDetail]=useState('');
+    const [DiaChi,setDiaChi]=useState([]);
+    const [DieuKien,setDieuKien]=useState([])
+    useEffect(()=>{
+        Axios.post("http://localhost:9000/customer/details",{ma:id}).then((respone)=>{
+            setDetail(respone.data) 
+        })
+        Axios.post("http://localhost:9000/customer/details_dc",{ma:id}).then((respone)=>{
+            setDiaChi(respone.data) 
+        })  
+        Axios.post("http://localhost:9000/customer/details_dk",{ma:id}).then((respone)=>{
+                
+                if(!respone.data.length)
+                {
+                    setDieuKien([...DieuKien,"Không có điều kiện cho Voucher này "])
+                }
+                else
+                {
+                    setDieuKien(respone.data)
+                }
+            })
+    },[])    
+    console.log(DieuKien)
+
     return (
+        
         <div style={{marginTop:'30px'}}>
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-3">
+            <div className="container"style={{width:'1000px'}}> 
+                <div className="row detail-all">
+                    <div className="col-lg-3 detail-img">
                         <div class="col--detail--1">
-                        <img src="/img/manager-1.jpg" />    
+                        <img src={Detail.Hinh} width="255px" height="105px"/>    
                         </div>
                     </div>
-                    <div className="col-lg-8 ">
-                    <Form 
-            name="normal_login"
-            // initialValues={{ remember: true }}
-            // onFinish={onFinish}
-            className="col-lg-8-detalis"
-            >
-                
-                <Form.Item
-                    name="tenVoucher"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống tên voucher' },
-                    ]}
-                    label="Tên Voucher"
-                    className="form__row"
-                >
-                <p>Tên Voucher</p>
-                </Form.Item>
-                <Form.Item 
-                label="Loại Voucher" 
-                name="select"
-                rules={[
-                    { required: true, message: 'Không được bỏ trống loại voucher' },
-                ]}
-                className="form__row"
-                >
-                  <p>Loại Voucher</p>
-                </Form.Item>
-                <Form.Item label="Điều kiện" name="dieukien"  className="form__row">
-                    <p>Điều Kiện</p>
-                </Form.Item>
-                <Form.Item
-                    name="diadiem"
-                    rules={[
-                        // { required: true, message: 'Không được bỏ trống địa điểm' },
-                    ]}
-                    label="Địa Điểm"
-                    className="form__row"
-                >
-                   <p>Địa Điểm</p>
-                    
-                </Form.Item>
-                <Form.Item
-                    name="gia"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống giá voucher' },
-                    ]}
-                    label="Giá"
-                    className="form__row"
-                >
-                   <p>Giá</p>
-                </Form.Item>
-                <Form.Item
-                    name="trigia"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống phần trăm giá' },
-                    ]}
-                    label="Phần Trăm Giá"
-                    className="form__row"
-                >
-                   <p>Giá Trị</p>
-                </Form.Item>
-                <Form.Item
-                    name="ngaybd"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống ngày bắt đầu' },
-                    ]}
-                    label="Ngày Bắt Đầu"
-                    className="form__row"
-                >
-                    {/* <RangePicker /> */}
-                   <p>Ngày bắt đầu</p>
-                </Form.Item>
-                <Form.Item
-                    name="ngaykt"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống ngày bắt đầu' },
-                    ]}
-                    label="Ngày Kết Thúc"
-                    className="form__row"
-                >
-                   <p>Ngày kết thúc</p>
-                   
-                </Form.Item>
-            </Form>
+                    <div className="col-lg-9">
                         
+                        <p className="detail-ten">{Detail.TenVoucher} giảm ngay {Detail.GiaTriSuDung}%</p>
+                        <p className="detail-loai">{Detail.LoaiVoucher}</p>
+                        <p className="detail-gia">Giá: <CurrencyFormat value={Detail.GiaTien} displayType={'text'} thousandSeparator={true} /> VNĐ</p>
+                        <Form.Item
+                            className="form__row"
+                            label="Điều kiện:"
+                        >
+                            {DieuKien.map((val)=>{
+                                if(DieuKien[0]=="Không có điều kiện cho Voucher này ")
+                                {
+                                    return <p>{DieuKien[0]}</p>
+                                    
+                                }
+                                else
+                                {
+                                    if(val.LoaiDieuKien=='A ')
+                                    {
+                                        return <p  style={{font:'14px'},{marginTop:'5px'}} >Giá tối thiểu cần đạt khi đặt phòng: <CurrencyFormat value={val.GiaTri} displayType={'text'} thousandSeparator={true} /> VNĐ</p>
+                                    }
+                                    else
+                                    {
+                                        return <p  style={{font:'14px'},{marginTop:'5px'}} >Số đêm tối thiểu cần đặt: {val.GiaTri} đêm </p>
+                                    }
+                                }
+                                
+                                    
+                               
+                                
+                            })}
+                        </Form.Item>
+                        <Form.Item
+                            className="form__row"
+                            label="Địa điểm áp dụng:"
+                        >
+                            {DiaChi.map((val)=>{
+                                return <p  style={{font:'14px'},{marginTop:'5px'}} >Số {val.So}, Đường {val.TenDuong} Quận {val.TenQuan} Thành phố {val.TenTP}</p>
+                            })}
+                        </Form.Item>
+                        <button type="button" className="detail-btn-mua">Mua Ngay</button>
                     </div>
-                    
                 </div>
             </div>
         </div>

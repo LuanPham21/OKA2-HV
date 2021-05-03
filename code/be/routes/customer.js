@@ -45,28 +45,41 @@ app.get("/list",(req,res)=>{
 });
 
 app.post("/details",(req,res)=>{
-    
-    var str ="SELECT * FROM Voucher Where MaVoucher = '"+req.Ma+ "'";  
-    var request_1=new sql.Request();
-    request_1.query(str,function(err,database){ 
+
+    sql.connect(config,(err,result)=>{
+        var str_1 ="SELECT * FROM Voucher Where MaVoucher = '"+req.body.ma+"' ;";
+
+        var request_2=new sql.Request();
+
+        request_2.query(str_1,function(err,database){ 
+
+            console.log(database)
+            res.send(database.recordset[0])
+            
+        })
     })
 });
 
 app.post("/details_dc",(req,res)=>{
     
-    
-    var str = "SELECT DiaDiemApDung.MaVoucher, DiaChi.So, DiaChi.TenDuong, DiaChi.TenQuan, DiaChi.TenTP FROM DiaDiemApDung  INER JOIN DiaChi  ON DiaDiemApDung.MaDiaChi = DiaChi.MaDiaChi WHERE DiaDiemApDung.MaVoucher='"+req.Ma+"'";  
-    var request_1=new sql.Request();
-    request_1.query(str,function(err,database){ 
-        res.send(database.recordset)
+    sql.connect(config,(err,result)=>{
+        var str = "SELECT DiaDiemApDung.MaVoucher, DiaChi.So, DiaChi.TenDuong, DiaChi.TenQuan, DiaChi.TenTP FROM DiaDiemApDung  INNER JOIN DiaChi  ON DiaDiemApDung.MaDiaChi = DiaChi.MaDiaChi WHERE DiaDiemApDung.MaVoucher='"+req.body.ma+"'";  
+        var request_1=new sql.Request();
+        request_1.query(str,function(err,database){ 
+            res.send(database.recordset)     
+        })
     })
 });
 
-app.post("/details_dc",(req,res)=>{
-    var str = "SELECT * FROM DieuKien Where MaVoucher='"+req.Ma+"'";  
-    var request_1=new sql.Request();
-    request_1.query(str,function(err,database){ 
-        res.send(database.recordset)
+app.post("/details_dk",(req,res)=>{
+    sql.connect(config,(err,result)=>{
+        var str = "SELECT * FROM DieuKien Where MaVoucher='"+req.body.ma+"'";  
+        var request_1=new sql.Request();
+        request_1.query(str,function(err,database){ 
+            console.log(database.recordset)
+
+            res.send(database.recordset)
+        })
     })
 });
 

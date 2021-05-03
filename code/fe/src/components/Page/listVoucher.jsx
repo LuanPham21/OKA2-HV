@@ -8,14 +8,12 @@ import Axios from "axios";
 export default function ListVoucher() {
     const [listtt,setlistt]=useState([]);
     // const[MaVoucher,SetMaVoucher]=useState('');
-    const onClick=function(value){
-        
-    }
+   
     useEffect(()=>{
         Axios.get("http://localhost:9000/customer/list").then((respone)=>{
             setlistt(respone.data)
         })
-    },[])
+    },[])   
     var data=Array.from(listtt);
     console.log(listtt)
     return (
@@ -24,7 +22,7 @@ export default function ListVoucher() {
              <Search/>
                        
              {data.map((val)=>{
-                 return <ManagerVoucher key={val.MaVoucher}  hinh ={val.Hinh} title ={val.TenVoucher} sdate={val.NgayBatDau} edate={val.NgayKetThuc} price={val.GiaTien} ></ManagerVoucher>
+                 return <ManagerVoucher key={val.MaVoucher} ma={val.MaVoucher}  hinh ={val.Hinh} title ={val.TenVoucher} sdate={val.NgayBatDau} edate={val.NgayKetThuc} price={val.GiaTien} ></ManagerVoucher>
              })} 
         </div>
     )

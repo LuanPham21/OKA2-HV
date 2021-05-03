@@ -12,7 +12,7 @@ export default function ManagerVoucher(state){
     return (
         <div>
             <div className="square_all" >
-                <a className="square_link">
+                <a href={`/detail/${state.ma}`} className="square_link">
                     <div className="square">
                         <div className="img">
                             <img src={state.hinh} className="square_img"/>

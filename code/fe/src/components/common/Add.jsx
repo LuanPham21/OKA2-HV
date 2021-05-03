@@ -10,13 +10,13 @@ import {getCurrentDate} from './utils'
 
 export default function Add() {
 
+    const [form] = Form.useForm();   
+    const [dieukien,setDieukien]=useState([{check:false,input:''},{check:false,input:''}])
     
-    const [dieukien,setDieukien]=useState([{check:false,input:''}])
-
     
-
-    const [form] = Form.useForm();
-
+        form.setFieldsValue("dieukien",[...dieukien,{check:false,input:''}])
+        form.setFieldsValue("dieukien",[...dieukien,{check:false,input:''}])
+ 
     const [text,setText]=useState(0);
     const onChangeGia = (e) =>{
         const value = Number(e.target.value.replace(/\ VNĐ\s?|(,*)/g, ''));
@@ -61,14 +61,18 @@ export default function Add() {
         }
     }
 
-    const onChange =(e)=>{
-        setDieukien(e.target.value)
-        console.log(dieukien)
-    }
-    const onChange_1 =(e)=>{
-        setDieukien_1(e.target.value)
-        console.log(dieukien_1)
-    }
+    const onChange = (name,index,e)=>{
+		let tempArray = [...dieukien];
+		if(name==='check')
+			tempArray[index] = {...tempArray[index],check:!tempArray[index]['check']}
+            
+		else
+			tempArray[index] = {...tempArray[index],input:e.target.value}
+            console.log(dieukien[index]['check'].values)
+		return setDieukien(tempArray)
+	}
+
+    
 
     const {RangePicker} = DatePicker;
     
@@ -122,17 +126,19 @@ export default function Add() {
                         <Select.Option value="demo">Demo</Select.Option>
                     </Select>
                 </Form.Item>
-                
+                {/* ( dieukien===''&&ttdieukien===true)||( dieukien===null&&ttdieukien===true)||( dieukien_1===''&&ttdieukien_1===true)||( dieukien_1===null&&ttdieukien_1===true) */}
                 <Form.Item
-                    name="dieu kien"
+                    
                     label="dieu kien"
                     rules={[
                         { }, 
                         {
                             validator(_,value) {
-                              if (( dieukien===''&&ttdieukien===true)||( dieukien===null&&ttdieukien===true)||( dieukien_1===''&&ttdieukien_1===true)||( dieukien_1===null&&ttdieukien_1===true)) {
+                              if ((dieukien[0]['check']===true&&dieukien[0]['input']==='')||((dieukien[1]['check']===true&&dieukien[1]['input']==='')))
+                              {
                                 return Promise.reject(new Error('The two passwords that you entered do not match!'));
                               }
+                                else
                               return Promise.resolve();
                             },
                         }
@@ -142,15 +148,30 @@ export default function Add() {
                     // style={{width:'120px'}}
                 >
                     <Space direction="vertical">
-                        <Space>
-                            <Checkbox id="dieukien" value="A" onClick={()=>setttDieukien(!ttdieukien)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
-                            <Input type="text" id="dk_1" disabled={!(ttdieukien)} defaultValue={dieukien} style={{width:100},{justifySelf:'center'}} onChange={onChange}></Input>  
-                        </Space>       
-                        <Space>
+                        <Form.Item name={['dieukien',0]}>
+                            <Form.Item name= {['dieukien',0,'check']}>
+                                <Checkbox  onClick={(e)=>onChange("check",0,e)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
+                            </Form.Item>
+                            <Form.Item name={['dieukien',0,'input']}>
+                                <Input style={{width:100},{justifySelf:'center'}} onChange={(e)=>onChange("input",0,e)} disabled={!dieukien[0]['check']} ></Input>  
+                            </Form.Item>
+                            
+                        </Form.Item>
+                        <Form.Item name={['dieukien',1]}>
+                            <Form.Item name= {['dieukien',1,'check']}>
+                                <Checkbox  value="A" onClick={(e)=>onChange("check",1,e)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
+                            </Form.Item>
+                            <Form.Item name={['dieukien',1,'input']}>
+                                <Input style={{width:100},{justifySelf:'center'}} onChange={(e)=>onChange("input",1,e)} disabled={!dieukien[1]['check']} ></Input>  
+                            </Form.Item>
+                            
+                        </Form.Item>
+                               
+                        {/* <Space>
                             <Checkbox id="dieukien_1" value="B" onClick={()=>setttDieukien_1(!ttdieukien_1)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
                             <Input type="text" id="dk_2" disabled={!(ttdieukien_1)} defaultValue={dieukien_1} style={{width:100},{justifySelf:'center'}} onChange={onChange_1}></Input>
 
-                        </Space>              
+                        </Space>               */}
                     </Space>
                     
                     
@@ -196,6 +217,7 @@ export default function Add() {
                     name="trigia"
                     label="Phần Trăm Giá"
                     className="form__row"
+
                     
                     rules={[
                         { validator(_,value){
@@ -203,8 +225,13 @@ export default function Add() {
                             {
                             return Promise.reject(new Error('Không được bỏ trống Giá'));
                             }
-                            return Promise.resolve();
                             
+                            if(value>=90||value<=10)
+                            {
+                                return Promise.reject(new Error('Vượt quá giới hạn cho phép'))
+                            }
+                            else
+                                new Error('Không được bỏ trống Giá')
                         },required:true},
                         
                     ]}

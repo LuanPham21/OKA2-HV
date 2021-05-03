@@ -23,7 +23,7 @@ function App(){
             <Navigation/> 
             <Switch>
                 <Route path='/' component={listVoucher} exact />  
-                <Route path='/detail' component={Detail}/>
+                <Route path='/detail/:id' component={Detail}/>
                 <Route path='/payment' component={listPayMent}/>
                 <Route path='/manage' component={Manage}/>
                 <Route path='/repair' component={Edit}/>
@@ -34,7 +34,7 @@ function App(){
 
             </Switch>
             {/* <GioHang/> */}
-            {/* <div style={{height:'1000px'}}></div> */}
+            <div style={{height:'20px'}}></div>
             
         </div>
       );
