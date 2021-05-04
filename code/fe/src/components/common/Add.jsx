@@ -6,83 +6,126 @@ import DieuKien from './DieuKien';
 import Popup from './Popup';
 import DiaDiem from './Checkbox';
 import {getCurrentDate} from './utils'
-
+import Axios from 'axios'
 
 export default function Add() {
 
     const [form] = Form.useForm();   
+    const[maVoucher,setmaVoucher]=useState('')
+    const[tenVoucher,settenVoucher]=useState('')
+    const[loaiVoucher,setloaiVoucher]=useState('')
+    const[soLuong,setsoLuong]=useState(0)
     const [dieukien,setDieukien]=useState([{check:false,input:''},{check:false,input:''}])
-    
+    const[diaDiem,setdiaDiem]=useState([])
+    const[gia,setGia]=useState(0)
+    const[ptram,setpTram]=useState(0)
+    const[ngaybatdau,setngaybd]=useState('')
+    const[ngayketthuc,setngayketthuc]=useState('')
     
 
-    form.setFieldsValue('dkien',[...dieukien,{check:false,input:''}])
-    form.setFieldsValue('dkien',[...dieukien,{check:false,input:''}])
- 
-    const [text,setText]=useState(0);
+    const[dsloaiVoucher,setdsloaiVoucher]=useState([])
+    const[dsDieuKien,setdsDieuKien]=useState([])
+    const[dsDiaChi,setdsDiaChi]=useState([])
+
+    useEffect(()=>{
+        Axios.get("http://localhost:9000/partner/list_loai").then((respone)=>{
+            setdsloaiVoucher(respone.data) 
+        })
+        Axios.get("http://localhost:9000/partner/list_dk").then((respone)=>{
+            setdsDieuKien(respone.data)
+        })
+        Axios.get("http://localhost:9000/partner/list_dc").then((respone)=>{
+            setdsDiaChi(respone.data)
+        })
+    },[])
+    
+    const onChangeDiaDiem=(checkedValues)=> {
+        console.log('checked = ', checkedValues);
+        setdiaDiem(checkedValues)
+      }
+
     const onChangeGia = (e) =>{
-        const value = Number(e.target.value.replace(/\ VNĐ\s?|(,*)/g, ''));
-        setText(value);
-        console.log(value)
-        form.setFieldsValue({
-            gia:value
-        });
+        const value = Number(e.target.value);
+        if(!isNaN(value))
+        {
+            setGia(value);
+        }
+        else
+        {
+            e.target.value=gia;
+        }
         
     };
 
     const [textTriGIa,setTextTriGia]=useState(0);
     const onChangeTriGia =(e)=>{
-        const value = Number(e.target.value.replace(/\ %\s?|(,*)/g, ''));
-        setTextTriGia(value);
-        console.log(value)
-        form.setFieldsValue({
-            trigia:value
-        });
+        const value = Number(e.target.value);
+        if(!isNaN(value))
+        {
+            setpTram(value);
+        }
+        else
+        {
+            e.target.value=ptram;
+        }
+        
+            
+            
+            
+        
+        
     }
 
 
 
     
-    const onFinish = (values) => {
-        console.log('Success:', values[0]['dieukien']);
-        console.log(dieukien[0]['check'])
-      };
+    
     
       const onFinishFailed = (errorInfo) => {
+          console.log(dieukien)
         console.log('Failed:', errorInfo);
       };
     
-      
-
-    
-    const [image,setImage]=useState('/img/manager-1.jpg');
-    const onImageChange = (e) =>{
-        if(e.target.files && e.target.files[0]){
+    const [image,setImage]=useState('/img/Voucher.png')
+    const onImageChange=(e)=>{
+        if(e.target.files && e.target.files[0]){    
             let img = e.target.files[0];
             setImage(URL.createObjectURL(img))
-
+            
         }
     }
 
-    const onChange = (name,index,e)=>{
+    
+    
+    const onChangeLoai=(e)=>{
+
+    }
+    const onChangeSL=(e)=>{
+        setsoLuong(e.target.value)
+    }
+    const onChangeDk = (name,index,e)=>{
 		let tempArray = [...dieukien];
 		if(name==='check')
         {
 			tempArray[index] = {...tempArray[index],check:!tempArray[index]['check']}
-            // if(tempArray[index]['check']==false)
-            // {
-            //     tempArray[index] = {...tempArray[index],input:''}
-            // }
-    }
+        }
 		else
-			tempArray[index] = {...tempArray[index],input:e.target.value}
-            console.log(dieukien[0]['check'])
+        {
+            tempArray[index] = {...tempArray[index],input:e.target.value}
+        }
+            console.log(e.target.value)
 		return setDieukien(tempArray)
 	}
 
     
 
     const {RangePicker} = DatePicker;
-    
+    const onFinish = (values) => {
+        
+        Axios.post("http://localhost:9000/partner/add",{ma:maVoucher,ten:tenVoucher,loai:loaiVoucher,sl:soLuong,dk:dieukien,dd:diaDiem,gia:gia,ptram:ptram,bd:ngaybatdau,kt:ngayketthuc,hinh:image}).then((respone)=>{
+            setdsDiaChi(respone.data)
+        })
+      };
     return (
         <div style={{marginTop:'30px'}}>
             <h1 style={{textAlign:'center',fontWeight:'bold',textTransform:'uppercase'}}>Thêm Voucher</h1>
@@ -119,7 +162,7 @@ export default function Add() {
                     label="Tên Voucher"
                     className="form__row"
                 >
-                <Input  placeholder="Nhập Tên Voucher ..."  />
+                    <Input  placeholder="Nhập Tên Voucher ..."  />
                 </Form.Item>
                 <Form.Item 
                 label="Loại Voucher" 
@@ -129,26 +172,51 @@ export default function Add() {
                 ]}
                 className="form__row"
                 >
-                    {/* <Select>
-                                {DiaChi.map((val)=>{
-                                    return<Select.Option key={val.So} value={val.MaDiaChi}>{val.So}</Select.Option> 
-                                })}
-                                
-                            </Select> */}
+                    <Select onChange={onChangeLoai}>
+                        {dsloaiVoucher.map((val)=>{
+                            return<Select.Option key={val.MaLoaiVoucher} value={val.MaLoaiVoucher}>{val.TenLoai}</Select.Option> 
+                        })}           
+                   </Select>
                 </Form.Item>
                 {/* ( dieukien===''&&ttdieukien===true)||( dieukien===null&&ttdieukien===true)||( dieukien_1===''&&ttdieukien_1===true)||( dieukien_1===null&&ttdieukien_1===true) */}
+                
                 <Form.Item
-                    
-                    label="dieu kien"
+                    name="soLuong"
                     rules={[
-                        { required:true,message:"S"}, 
+                        {  validator(value){
+                            if(soLuong<=0||soLuong=="")
+                            {
+                                return Promise.reject(new Error('Không được để trống và phải đạt giá trị tối thiểu'));
+                            }
+                            else
+                            
+                                return Promise.resolve()
+                            
+                        }},
+                    ]}  
+                    label="Số lượng"
+                    className="form__row"
+                >
+                    <input  type="number" className="form__input" placeholder="Số Lượng...."  suffix="VNĐ" onChange={onChangeSL}/>
+
+                </Form.Item>
+                
+                <Form.Item
+                name="dieukien"
+                    label="Điều Kiện:"
+                    rules={[
+                         
                         {
                             validator(_,value) {
-                              if ((dieukien[0]['check']===true&&dieukien[0]['input']==='')||((dieukien[1]['check']===true&&dieukien[1]['input']==='')))
+                              if ((dieukien[0]['check']===true&&dieukien[0]['input']==='')||(dieukien[1]['check']===true&&dieukien[1]['input']===''))
                               {
                                 return Promise.reject(new Error('The two passwords that you entered do not match!'));
                               }
-                                else
+                            //    else if()
+                            //     {
+
+                            //     }
+                            else
                               return Promise.resolve();
                             },
                         }
@@ -157,55 +225,23 @@ export default function Add() {
                     className="form__row"
                     // style={{width:'120px'}}
                 >
-                            <Form.Item name={['dkien',0]}
-                                rules={[
-                                    {
-                                        validator(_,value) {
-                                          if ((dieukien[0]['check']===true&&dieukien[0]['input']===''))
-                                          {
-                                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                                          }
-                                            else
-                                          return Promise.resolve();
-                                        },
-                                    } 
-                                ]}
-                            >
+                            <Space direction="vertical">
                                 <Space>
-                                    <Form.Item name= {['dkien',0,'check']}>
-                                        <Checkbox defaultValue={"AAAAA"} onClick={(e)=>onChange("check",0,e)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
-                                    </Form.Item>
-                                    <Form.Item name={['dkien',0,'input']}>
-                                        <Input style={{width:100},{justifySelf:'center'}} onChange={(e)=>onChange("input",0,e)} disabled={!dieukien[0]['check']} ></Input>  
-                                    </Form.Item>
+                                    
+                                        <Checkbox value="A" onClick={(e)=>onChangeDk("check",0,e)}>Số đêm tối thiểu</Checkbox>  
+                                        <Input id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}}  onChange={(e)=>onChangeDk("input",0,e)} disabled={!dieukien[0]['check']} /><p style={{display:'none'}}>;</p>
+                                    
                                 </Space>
-                            </Form.Item>
-                     
-                        
-                            <Form.Item name={['dkien',1]}
-                                rules={[
-                                    {
-                                        validator(_,value) {
-                                          if ((dieukien[1]['check']===true&&dieukien[1]['input']===''))
-                                          {
-                                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                                          }
-                                            else
-                                          return Promise.resolve();
-                                        },
-                                    } 
-                                ]}
-                            >
                                 <Space>
-                                    <Form.Item name= {['dkien',1,'check']}>
-                                        <Checkbox  value="A" onClick={(e)=>onChange("check",1,e)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
-                                    </Form.Item>
-                                    <Form.Item name={['dkien',1,'input']}>
-                                        <Input style={{width:100},{justifySelf:'center'}} onChange={(e)=>onChange("input",1,e)} disabled={!dieukien[1]['check']} ></Input>  
-                                    </Form.Item>
-                                </Space>
+                                    
+                                        <Checkbox  value="A" onClick={(e)=>onChangeDk("check",1,e)}>Giá trị đơn đặt tối thiểu</Checkbox>  
+                                    
+                                        <CurrencyInput id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}}  onChange={(e)=>onChangeDk("input",1,e)} disabled={!dieukien[1]['check']} /><p style={{display:'none'}}>;</p>
 
-                            </Form.Item>
+                                        
+                                   
+                                </Space>
+                            </Space>
                         
                         
                                
@@ -230,56 +266,71 @@ export default function Add() {
                     className="form__row"
                 >
                     
-                    <Checkbox.Group>
-                        
+                    <Checkbox.Group onChange={onChangeDiaDiem}>
+                        <Space direction="vertical">
+                            {dsDiaChi.map((val)=>{
+                                return <Checkbox key={val.MaDiaChi}value={val.MaDiaChi}>Số {val.So}, Đường {val.TenDuong} Quận {val.TenQuan} Thành phố {val.TenTP}</Checkbox>
+                            })}
+                        </Space>
                     </Checkbox.Group>
                     
                 </Form.Item>
                 <Form.Item
                     name="gia"
                     rules={[
-                        { validator(_,value){
-                            if(value===0||value==null||value=='')
-                            {
-                            return Promise.reject(new Error('Không được bỏ trống Trị Giá'));
-                            }
-                            return Promise.resolve();
-                            
-                        }},
+                        ({ getFieldValue })=>(
+                            { validator(_,value=''){
+                                if(value===0||value===null||value==='')
+                                {
+                                    return Promise.reject(new Error('Không được bỏ trống Trị Giá'));
+                                }
+                                else
+                                    return Promise.resolve();
+                                
+                            }}
+                        ),
+                        
+                        
                         
                     ]}
-                    label="Giá"
+                    label="Giá (VNĐ)"
                     className="form__row"
              
                     
                 >
-                   <CurrencyInput id="id_input_1" className="form__input" suffix=" VNĐ"  onChange={onChangeGia}/><p style={{display:'none'}}>;</p>
+                   <input  type="number" className="form__input"  suffix="VNĐ" onChange={onChangeGia}/>
                 </Form.Item>
                 <Form.Item
                     name="trigia"
-                    label="Phần Trăm Giá"
+                    label="Phần Trăm Giá (%)"
                     className="form__row"
 
                     
                     rules={[
+                        
                         { validator(_,value){
-                            if(value===0||value==null||value=='')
+                            if(ptram===0||ptram=='')
                             {
-                            return Promise.reject(new Error('Không được bỏ trống Giá'));
+                                return Promise.reject(new Error('Không được bỏ trống giá trị %'))
                             }
-                            
-                            if(value>=90||value<=10)
+                            else if(ptram<10)
                             {
-                                return Promise.reject(new Error('Vượt quá giới hạn cho phép'))
+                                return Promise.reject(new Error('Chưa đạt được mức tối thiểu'))
+                            }
+                            else if(ptram>90)
+                            {
+                                return Promise.reject(new Error('Vượt quá hạn mức có thể'))
                             }
                             else
-                                new Error('Không được bỏ trống Giá')
-                        },required:true},
+                                return Promise.resolve();
+                        }},
                         
                     ]}
                 >
-                    <CurrencyInput id="id_input" className="form__input" suffix=" %"  onChange={onChangeTriGia}/><p style={{display:'none'}}>;</p>
+                    
+                    <input type="number" className="form__input"  onChange={onChangeTriGia}/>
                 </Form.Item>
+               
                 <Form.Item
                     name="ngaybd"
                     
@@ -296,8 +347,13 @@ export default function Add() {
                                 }
                                 return Promise.resolve();
                             },
+                            
                           }),
-                    ]}
+                          
+                          
+                    ]
+                    
+                }
                     label="Ngày bắt đầu"
                     className="form__row"
                 >

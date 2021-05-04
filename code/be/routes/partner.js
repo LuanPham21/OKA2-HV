@@ -33,14 +33,52 @@ app.get("/list",(req,res)=>{
         })
     });
 });
+app.get("/list_loai",(req,res)=>{
+    sql.connect(config,(err,result)=>{
+        var request=new sql.Request();
+        var loai="SELECT * FROM LoaiVoucher"
+        request.query(loai,function(err,database){
+            
+                console.log(database.recordset)
+                res.send(database.recordset)
+            
+        })
+    })
+})
+app.get("/list_dc",(req,res)=>{
+    sql.connect(config,(err,result)=>{
+        var request=new sql.Request();
+        var loai="SELECT * FROM DiaChi"
+        request.query(loai,function(err,database){
+                console.log(database.recordset  )
+                res.send(database.recordset)
+           
+        })
+    })
+})
 
+
+app.get("/list_dk",(req,res)=>{
+    sql.connect(config,(err,result)=>{
+        var request=new sql.Request();
+        var loai="SELECT * FROM DieuKien"
+        request.query(loai,function(err,database){
+                console.log(database.recordset)
+                res.send(database.recordset)
+            
+        })
+    })
+})
 
 app.post("/add",(req,res)=>{
-    var str = "INSERT INTO Voucher Value MaVoucher ='"+req.ma+"' TenVoucher='"+req.ten+"' MaLoaiVoucher= '"+req.loai+"' SoLuong= "+req.soluong+"' NgayBatDau= "+req.ngay1+" NgayKetThuc= "+req.ngay2+" GiaTriSuDung= "+req.giatri+" GiaTien= "+req.gia+" Hinh= '"+req.hinh+"' TrangThai= '"+req.tt+"'";
-    var request_1=new sql.Request();
-    request_1.query(str,function(err,database){ 
+    sql.connect(config,(err,result)=>{
+        console.log(req.body)
+        // var str = "INSERT INTO Voucher Value MaVoucher ='"+req.ma+"' TenVoucher='"+req.ten+"' MaLoaiVoucher= '"+req.loai+"' SoLuong= "+req.soluong+"' NgayBatDau= "+req.ngay1+" NgayKetThuc= "+req.ngay2+" GiaTriSuDung= "+req.giatri+" GiaTien= "+req.gia+" Hinh= '"+req.hinh+"' TrangThai= '"+req.tt+"'";
+        var request_1=new sql.Request();
+        // request_1.query(str,function(err,database){ 
+        // })
     })
-});
+})
 
 app.post("/edit",(req,res)=>{
     var str = "UPDATE Voucher SET TenVoucher='"+req.ten+"' MaLoaiVoucher= '"+req.loai+"' SoLuong= "+req.soluong+"' NgayBatDau= "+req.ngay1+" NgayKetThuc= "+req.ngay2+" GiaTriSuDung= "+req.giatri+" GiaTien= "+req.gia+" Hinh= '"+req.hinh+"'  WHERE MaVoucher ='"+req.ma+"'";
