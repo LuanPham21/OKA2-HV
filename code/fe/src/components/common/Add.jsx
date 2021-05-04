@@ -14,8 +14,9 @@ export default function Add() {
     const [dieukien,setDieukien]=useState([{check:false,input:''},{check:false,input:''}])
     
     
-        form.setFieldsValue("dieukien",[...dieukien,{check:false,input:''}])
-        form.setFieldsValue("dieukien",[...dieukien,{check:false,input:''}])
+
+    form.setFieldsValue('dkien',[...dieukien,{check:false,input:''}])
+    form.setFieldsValue('dkien',[...dieukien,{check:false,input:''}])
  
     const [text,setText]=useState(0);
     const onChangeGia = (e) =>{
@@ -42,7 +43,8 @@ export default function Add() {
 
     
     const onFinish = (values) => {
-        console.log('Success:', values);
+        console.log('Success:', values[0]['dieukien']);
+        console.log(dieukien[0]['check'])
       };
     
       const onFinishFailed = (errorInfo) => {
@@ -64,11 +66,16 @@ export default function Add() {
     const onChange = (name,index,e)=>{
 		let tempArray = [...dieukien];
 		if(name==='check')
+        {
 			tempArray[index] = {...tempArray[index],check:!tempArray[index]['check']}
-            
+            // if(tempArray[index]['check']==false)
+            // {
+            //     tempArray[index] = {...tempArray[index],input:''}
+            // }
+    }
 		else
 			tempArray[index] = {...tempArray[index],input:e.target.value}
-            console.log(dieukien[index]['check'].values)
+            console.log(dieukien[0]['check'])
 		return setDieukien(tempArray)
 	}
 
@@ -102,7 +109,7 @@ export default function Add() {
                     label="Mã Voucher"
                     className="form__row"
                 >
-                <Input  placeholder="Nhập Mã Voucher ('MV...')..."  className="form__input" disabled />
+                <Input  placeholder="Nhập Mã Voucher ('MV...')..." defaultValue="AAAAAAAAA" className="form__input" disabled />
                 </Form.Item>
                 <Form.Item
                     name="tenVoucher"
@@ -122,16 +129,19 @@ export default function Add() {
                 ]}
                 className="form__row"
                 >
-                    <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                    </Select>
+                    {/* <Select>
+                                {DiaChi.map((val)=>{
+                                    return<Select.Option key={val.So} value={val.MaDiaChi}>{val.So}</Select.Option> 
+                                })}
+                                
+                            </Select> */}
                 </Form.Item>
                 {/* ( dieukien===''&&ttdieukien===true)||( dieukien===null&&ttdieukien===true)||( dieukien_1===''&&ttdieukien_1===true)||( dieukien_1===null&&ttdieukien_1===true) */}
                 <Form.Item
                     
                     label="dieu kien"
                     rules={[
-                        { }, 
+                        { required:true,message:"S"}, 
                         {
                             validator(_,value) {
                               if ((dieukien[0]['check']===true&&dieukien[0]['input']==='')||((dieukien[1]['check']===true&&dieukien[1]['input']==='')))
@@ -147,32 +157,64 @@ export default function Add() {
                     className="form__row"
                     // style={{width:'120px'}}
                 >
-                    <Space direction="vertical">
-                        <Form.Item name={['dieukien',0]}>
-                            <Form.Item name= {['dieukien',0,'check']}>
-                                <Checkbox  onClick={(e)=>onChange("check",0,e)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
+                            <Form.Item name={['dkien',0]}
+                                rules={[
+                                    {
+                                        validator(_,value) {
+                                          if ((dieukien[0]['check']===true&&dieukien[0]['input']===''))
+                                          {
+                                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                          }
+                                            else
+                                          return Promise.resolve();
+                                        },
+                                    } 
+                                ]}
+                            >
+                                <Space>
+                                    <Form.Item name= {['dkien',0,'check']}>
+                                        <Checkbox defaultValue={"AAAAA"} onClick={(e)=>onChange("check",0,e)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
+                                    </Form.Item>
+                                    <Form.Item name={['dkien',0,'input']}>
+                                        <Input style={{width:100},{justifySelf:'center'}} onChange={(e)=>onChange("input",0,e)} disabled={!dieukien[0]['check']} ></Input>  
+                                    </Form.Item>
+                                </Space>
                             </Form.Item>
-                            <Form.Item name={['dieukien',0,'input']}>
-                                <Input style={{width:100},{justifySelf:'center'}} onChange={(e)=>onChange("input",0,e)} disabled={!dieukien[0]['check']} ></Input>  
+                     
+                        
+                            <Form.Item name={['dkien',1]}
+                                rules={[
+                                    {
+                                        validator(_,value) {
+                                          if ((dieukien[1]['check']===true&&dieukien[1]['input']===''))
+                                          {
+                                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                          }
+                                            else
+                                          return Promise.resolve();
+                                        },
+                                    } 
+                                ]}
+                            >
+                                <Space>
+                                    <Form.Item name= {['dkien',1,'check']}>
+                                        <Checkbox  value="A" onClick={(e)=>onChange("check",1,e)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
+                                    </Form.Item>
+                                    <Form.Item name={['dkien',1,'input']}>
+                                        <Input style={{width:100},{justifySelf:'center'}} onChange={(e)=>onChange("input",1,e)} disabled={!dieukien[1]['check']} ></Input>  
+                                    </Form.Item>
+                                </Space>
+
                             </Form.Item>
-                            
-                        </Form.Item>
-                        <Form.Item name={['dieukien',1]}>
-                            <Form.Item name= {['dieukien',1,'check']}>
-                                <Checkbox  value="A" onClick={(e)=>onChange("check",1,e)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
-                            </Form.Item>
-                            <Form.Item name={['dieukien',1,'input']}>
-                                <Input style={{width:100},{justifySelf:'center'}} onChange={(e)=>onChange("input",1,e)} disabled={!dieukien[1]['check']} ></Input>  
-                            </Form.Item>
-                            
-                        </Form.Item>
+                        
+                        
                                
                         {/* <Space>
                             <Checkbox id="dieukien_1" value="B" onClick={()=>setttDieukien_1(!ttdieukien_1)}>AAAAAAAAAAAAAAAAAA</Checkbox>  
                             <Input type="text" id="dk_2" disabled={!(ttdieukien_1)} defaultValue={dieukien_1} style={{width:100},{justifySelf:'center'}} onChange={onChange_1}></Input>
 
                         </Space>               */}
-                    </Space>
+                    
                     
                     
                     
