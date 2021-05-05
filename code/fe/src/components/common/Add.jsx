@@ -7,8 +7,13 @@ import Popup from './Popup';
 import DiaDiem from './Checkbox';
 import {getCurrentDate} from './utils'
 import Axios from 'axios'
+import { Redirect } from 'react-router';
 
 export default function Add() {
+
+    const date = Date.now();
+    let today= new Date(date);
+    
 
     const [form] = Form.useForm();   
     const[maVoucher,setmaVoucher]=useState('')
@@ -22,6 +27,7 @@ export default function Add() {
     const[ngaybatdau,setngaybd]=useState('')
     const[ngayketthuc,setngayketthuc]=useState('')
     
+   
 
     const[dsloaiVoucher,setdsloaiVoucher]=useState([])
     const[dsDieuKien,setdsDieuKien]=useState([])
@@ -37,8 +43,11 @@ export default function Add() {
         Axios.get("http://localhost:9000/partner/list_dc").then((respone)=>{
             setdsDiaChi(respone.data)
         })
+        Axios.get("http://localhost:9000/partner/ma").then((respone)=>{
+            setmaVoucher("MV"+respone.data[0].Dem)
+            console.log(maVoucher)
+        })
     },[])
-    
     const onChangeDiaDiem=(checkedValues)=> {
         console.log('checked = ', checkedValues);
         setdiaDiem(checkedValues)
@@ -50,39 +59,33 @@ export default function Add() {
         {
             setGia(value);
         }
-        else
-        {
-            e.target.value=gia;
-        }
+        
         
     };
+    
 
     const [textTriGIa,setTextTriGia]=useState(0);
     const onChangeTriGia =(e)=>{
-        const value = Number(e.target.value);
-        if(!isNaN(value))
-        {
-            setpTram(value);
+        if(!isNaN(Number(e.target.value)))
+          {
+              setpTram(e.target.value)      
+            }
         }
-        else
-        {
-            e.target.value=ptram;
-        }
+
+
+
+    const onChangeBd=(e)=>{
         
-            
-            
-            
-        
-        
+        setngaybd(e.target.value)
+
     }
-
-
-
     
-    
+    const onChangeKt=(e)=>{
+        setngayketthuc(e.target.value)
+    }
     
       const onFinishFailed = (errorInfo) => {
-          console.log(dieukien)
+          
         console.log('Failed:', errorInfo);
       };
     
@@ -98,10 +101,16 @@ export default function Add() {
     
     
     const onChangeLoai=(e)=>{
-
+        console.log(e.target.value)
+        setloaiVoucher(e.target.value)
     }
-    const onChangeSL=(e)=>{
-        setsoLuong(e.target.value)
+    const onChangeSL=(event)=>{
+        
+          if(!isNaN(Number(event.target.value)))
+          {
+              console.log(isNaN(Number(event.target.value)))
+            setsoLuong((event.target.value))
+          }
     }
     const onChangeDk = (name,index,e)=>{
 		let tempArray = [...dieukien];
@@ -113,18 +122,21 @@ export default function Add() {
         {
             tempArray[index] = {...tempArray[index],input:e.target.value}
         }
-            console.log(e.target.value)
 		return setDieukien(tempArray)
 	}
+
+    const onChangeTen=(e)=>{
+        settenVoucher(e.target.value)
+    }
 
     
 
     const {RangePicker} = DatePicker;
     const onFinish = (values) => {
-        
-        Axios.post("http://localhost:9000/partner/add",{ma:maVoucher,ten:tenVoucher,loai:loaiVoucher,sl:soLuong,dk:dieukien,dd:diaDiem,gia:gia,ptram:ptram,bd:ngaybatdau,kt:ngayketthuc,hinh:image}).then((respone)=>{
-            setdsDiaChi(respone.data)
-        })
+        Axios.post("http://localhost:9000/partner/add",{ma:maVoucher,ten:tenVoucher,loai:values.select,sl:soLuong,dk:dieukien,dd:diaDiem,gia:gia,ptram:ptram,bd:values.ngaybd,kt:values.ngaykt,hinh:image
+    })
+        return <Redirect to="/manage" />
+    
       };
     return (
         <div style={{marginTop:'30px'}}>
@@ -147,13 +159,13 @@ export default function Add() {
                         className="col-lg-8-detalis"
                         
             >
-                <Form.Item
+                {/* <Form.Item
                     name="maVoucher"
                     label="Mã Voucher"
                     className="form__row"
                 >
-                <Input  placeholder="Nhập Mã Voucher ('MV...')..." defaultValue="AAAAAAAAA" className="form__input" disabled />
-                </Form.Item>
+                <Input  placeholder="Nhập Mã Voucher ('MV...')..." defaultValue="AAAAAAAAA"  className="form__input" disabled /> */}
+                {/* </Form.Item> */}
                 <Form.Item
                     name="tenVoucher"
                     rules={[
@@ -162,7 +174,7 @@ export default function Add() {
                     label="Tên Voucher"
                     className="form__row"
                 >
-                    <Input  placeholder="Nhập Tên Voucher ..."  />
+                    <Input  placeholder="Nhập Tên Voucher ..." onChange={onChangeTen} />
                 </Form.Item>
                 <Form.Item 
                 label="Loại Voucher" 
@@ -172,9 +184,10 @@ export default function Add() {
                 ]}
                 className="form__row"
                 >
-                    <Select onChange={onChangeLoai}>
+                    <Select>
                         {dsloaiVoucher.map((val)=>{
-                            return<Select.Option key={val.MaLoaiVoucher} value={val.MaLoaiVoucher}>{val.TenLoai}</Select.Option> 
+                            
+                            return<Select.Option  value={val.MaLoaiVoucher}>{val.TenLoai}</Select.Option> 
                         })}           
                    </Select>
                 </Form.Item>
@@ -197,10 +210,9 @@ export default function Add() {
                     label="Số lượng"
                     className="form__row"
                 >
-                    <input  type="number" className="form__input" placeholder="Số Lượng...."  suffix="VNĐ" onChange={onChangeSL}/>
+                    <Input type="number"  className="form__input" placeholder="Số Lượng...."  onChange={onChangeSL}/>
 
                 </Form.Item>
-                
                 <Form.Item
                 name="dieukien"
                     label="Điều Kiện:"
@@ -229,14 +241,14 @@ export default function Add() {
                                 <Space>
                                     
                                         <Checkbox value="A" onClick={(e)=>onChangeDk("check",0,e)}>Số đêm tối thiểu</Checkbox>  
-                                        <Input id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}}  onChange={(e)=>onChangeDk("input",0,e)} disabled={!dieukien[0]['check']} /><p style={{display:'none'}}>;</p>
+                                        <input type="number" id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}}  onChange={(e)=>onChangeDk("input",0,e)} disabled={!dieukien[0]['check']} />
                                     
                                 </Space>
                                 <Space>
                                     
                                         <Checkbox  value="A" onClick={(e)=>onChangeDk("check",1,e)}>Giá trị đơn đặt tối thiểu</Checkbox>  
                                     
-                                        <CurrencyInput id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}}  onChange={(e)=>onChangeDk("input",1,e)} disabled={!dieukien[1]['check']} /><p style={{display:'none'}}>;</p>
+                                        <input type="number" id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}}  onChange={(e)=>onChangeDk("input",1,e)} disabled={!dieukien[1]['check']} />
 
                                         
                                    
@@ -298,7 +310,7 @@ export default function Add() {
              
                     
                 >
-                   <input  type="number" className="form__input"  suffix="VNĐ" onChange={onChangeGia}/>
+                   <Input  type="number" className="form__input"   onChange={onChangeGia}/>
                 </Form.Item>
                 <Form.Item
                     name="trigia"
@@ -328,7 +340,7 @@ export default function Add() {
                     ]}
                 >
                     
-                    <input type="number" className="form__input"  onChange={onChangeTriGia}/>
+                    <Input type="number" className="form__input"  onChange={onChangeTriGia}/>
                 </Form.Item>
                
                 <Form.Item
@@ -340,11 +352,19 @@ export default function Add() {
                             validator(_, value) {
                                 if(getFieldValue('ngaykt') != null)
                                 {
-                                    if (!value || getFieldValue('ngaykt') >= value) {
-                                        return Promise.resolve();
+                                    if (!value || getFieldValue('ngaykt')<=value) {
+                                        return Promise.reject(new Error('Ngày bắt đầu phải <= ngày kết thúc'));
                                       }
-                                      return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                    
+                                    else
+                                        return Promise.resolve();
+
+                    
                                 }
+                                if(value<=today) {
+                                    return Promise.reject(new Error('Ngày bắt đầu có hiệu lực hiệu lực phải >= ngày hôm nay'));
+                                }
+                                else
                                 return Promise.resolve();
                             },
                             
@@ -359,20 +379,25 @@ export default function Add() {
                 >
                     {/* <RangePicker /> */}
                     {/* <RangePicker renderExtraFooter={() => 'extra footer'} className='form__input'   /> */}
-                    <DatePicker placeholder="Nhập Ngày Kết Thúc..." className="form__input"/>
+                    <DatePicker placeholder="Nhập Ngày Kết Thúc..." className="form__input" onClick={onChangeBd}/>
                 </Form.Item>
                 <Form.Item
                     name="ngaykt"
                     rules={[
-                        { required: true, message: 'Không được bỏ trống ngày bắt đầu' },    
+                        { required: true, message: 'Không được bỏ trống ngày kết thúc' },    
                         ({ getFieldValue }) => ({
                             validator(_, value) {
                                 if(getFieldValue('ngaybd') != null)
                                 {
-                                    if (!value || getFieldValue('ngaybd') <= value) {
-                                        return Promise.resolve();
+                                    if (!value || getFieldValue('ngaybd') >=value) {
+                                        return Promise.reject(new Error('Ngày kết thúc phải >= ngày bắt đầu'));
                                       }
-                                      return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                    else if(value<=today) {
+                                        return Promise.reject(new Error('Ngày kết thúc hiệu lực phải >= ngày hôm nay'));
+                                    }
+                                    else
+                                        return Promise.resolve();
+                                      
                                 }
                                 return Promise.resolve();
                             },
@@ -383,7 +408,7 @@ export default function Add() {
                     label="Ngày Kết Thúc"
                     className="form__row"
                 >
-                   <DatePicker placeholder="Nhập Ngày Kết Thúc..." className="form__input"/>
+                   <DatePicker placeholder="Nhập Ngày Kết Thúc..." className="form__input" onClick={onChangeKt}/>
                 </Form.Item>
                 
                 <Form.Item className="form-btn-login">

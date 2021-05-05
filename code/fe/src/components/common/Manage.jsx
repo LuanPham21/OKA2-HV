@@ -11,10 +11,10 @@ export default function Manage() {
     
 
     useEffect(()=>{
-        Axios.get("http://localhost:9000/manage").then((respone)=>{
+        Axios.get("http://localhost:9000/partner/list").then((respone)=>{
             setlist(respone.data)
         })
-    })
+    },[])
     console.log(list)
 
 
@@ -43,10 +43,10 @@ export default function Manage() {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {list.map((val)=>{
-                        return <Part ></Part>
-                    })} */}
-                    <Part/>
+                    {list.map((val)=>{
+                        return <Part ma={val.MaVoucher} ten={val.TenVoucher} loai={val.TenLoai} giatri={val.GiaTriSuDung} gia={val.GiaTien} tt={val.TrangThai}></Part>
+                    })}
+                    
                   
                 </tbody>
             </table>

@@ -19,26 +19,23 @@ var today_1 = dateFormat(today,"yyyy-mm-dd")
 app.get("/list",(req,res)=>{
     var a= "Voucher1"
     sql.connect(config,(err,result)=>{
-        var update ="Update Voucher SET TrangThai ='U' WHERE NgayBatDau > '"+today_1+"' OR NgayKetThuc <'"+today_1+"'";
+        var update ="Update Voucher SET TrangThai ='U' WHERE  NgayKetThuc <'"+today_1+"'";
         var request=new sql.Request();
         request.query(update,function(err,database){ 
         })
-        
+        var update_2 ="Update Voucher SET TrangThai ='P' WHERE  NgayBatDau > '"+today_1+"'";
+        request.query(update_2,function(err,database){ 
+        })
         var update_1 ="Update Voucher SET TrangThai = 'A' WHERE NgayBatDau <= '"+today_1+"'AND NgayKetThuc >'"+today_1+"'";
         var request_1=new sql.Request();
         request_1.query(update_1,function(err,database){ 
         })
-
         var str ="SELECT * FROM Voucher Where TrangThai = 'A' "    
         request.query(str,function(err,database){
             if(database.recordset[0].NgayBatDau<today)
             {
-                console.log(database)
                 res.send(database.recordset)
             }
-            
-            // console.log(today_1);
-            // console.log(database.recordset[0].NgayBatDau-today);
         })
 
     });
