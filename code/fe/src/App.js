@@ -27,11 +27,11 @@ function App(){
                 <Route path='/detail/:id' component={Detail}/>
                 <Route path='/payment' component={listPayMent}/>
                 <Route path='/manage' component={Manage}/>
-                <Route path='/repair' component={Edit}/>
+                <Route path='/edit/:id' component={Edit}/>
                 <Route path='/add' component={Add}/>
                 <Route path='/login' component={Login}/>
                 <Route path='/signin' component={SignIn}/>
-                <Route path='*' component={NotFoundPage}/>
+                {/* <Route path='*' component={NotFoundPage}/> */}
 
             </Switch>
             <div style={{height:'80px'}}></div>

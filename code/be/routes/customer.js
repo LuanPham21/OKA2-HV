@@ -16,6 +16,15 @@ app.use(express.json());
 const date = Date.now();
 let today= new Date(date);
 var today_1 = dateFormat(today,"yyyy-mm-dd")
+app.get("/test",(req,res)=>{
+    // var connection = new Connection(config);  
+    // connection.on('connect', function(err) {  
+    //     // If no error, then good to proceed.
+    //     console.log("Connected");  
+    // });
+    
+}
+)
 app.get("/list",(req,res)=>{
     var a= "Voucher1"
     sql.connect(config,(err,result)=>{
@@ -30,15 +39,16 @@ app.get("/list",(req,res)=>{
         var request_1=new sql.Request();
         request_1.query(update_1,function(err,database){ 
         })
-        var str ="SELECT * FROM Voucher Where TrangThai = 'A' "    
+        var str ="SELECT * FROM Voucher "    
         request.query(str,function(err,database){
-            if(database.recordset[0].NgayBatDau<today)
-            {
+            
                 res.send(database.recordset)
-            }
+           
         })
+      
 
     });
+    
 });
 
 app.post("/details",(req,res)=>{

@@ -6,6 +6,7 @@ var Customer = require('./routes/customer');
 var Partner = require("./routes/partner");
 var app = express();
 
+app.use(cors())
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
