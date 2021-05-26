@@ -1,8 +1,10 @@
 import React,{Component, useState} from 'react';
 import '../css/ManagerVoucher.css';
+import dateFormat from 'dateformat'
 import { EnvironmentOutlined } from '@ant-design/icons';
 import Axios from "axios";
 var CurrencyFormat = require('react-currency-format');
+
 export default function ManagerVoucher(state){ 
 
     const[MaV,setMaV]=useState('')
@@ -19,7 +21,7 @@ export default function ManagerVoucher(state){
                         </div>
                         <div className="body">
                             <h3 className="square_title" id="ten">{state.title}</h3>
-                            <p className="square_desc"> {state.sdate} - {state.edate}</p>
+                            <p className="square_desc">{dateFormat(state.sdate, 'dd/mm/yyyy')} - {dateFormat(state.edate, 'dd/mm/yyyy')}</p>
                             <p className="square_price"><CurrencyFormat value={state.price} displayType={'text'} thousandSeparator={true} /> VNĐ</p>
                         </div>
                         

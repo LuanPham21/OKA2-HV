@@ -3,8 +3,11 @@ import '../css/Header.css';
 import { Drawer } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import {Link} from 'react-router-dom';
-export default function Header() {
+import {useHistory} from 'react-router-dom'
+
+export default function Header_kh() {
     // header
+    const history=useHistory()
     const [visible, setVisible] = useState(false);
     const showDrawer = () => {
         setVisible(true);
@@ -12,7 +15,12 @@ export default function Header() {
     const onClose = () => {
         setVisible(false);
     };
-    
+    const onClick=()=>{
+        sessionStorage.clear();
+        window.location.reload();
+        history.push("/login")
+        
+    }
     return (
         <div className="header">
             <div className="header-logo">
@@ -24,11 +32,7 @@ export default function Header() {
                 </a>
             </div>
             <div className="header-right">
-                <a href="/promotion">Khuyến Mãi</a>
-                <a href="/cooperate">Hợp Tác Với Chúng Tôi</a>
-                <a href="/save">Đã Lưu</a>
-                <a href="/book">Đặt Chỗ Của Tôi</a>
-                <Link to='/login' className="login" >Đăng Nhập</Link>
+                <button className="login" onClick={onClick}> Đăng xuất</button>
             </div>
         </div>
     )

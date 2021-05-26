@@ -9,60 +9,97 @@ import {getCurrentDate} from './utils'
 import Axios from 'axios'
 import { Redirect } from 'react-router';
 import {useHistory} from 'react-router-dom'
+import moment from 'moment';
+
 export default function Edit(props) {
     const date = Date.now();
     let today= new Date(date);
     const {id}=props.match.params;
+    const dateFormat = 'YYYY-MM-DD';
 
-    const [form] = Form.useForm();   
+    const [form] = Form.useForm(); 
+    const[voucher,setVoucher]=useState([])  
     const[maVoucher,setmaVoucher]=useState('')
     const[tenVoucher,settenVoucher]=useState('')
     const[loaiVoucher,setloaiVoucher]=useState('')
     const[soLuong,setsoLuong]=useState(0)
     const [dieukien,setDieukien]=useState([{check:false,input:''},{check:false,input:''}])
-    const[diaDiem,setdiaDiem]=useState([])
+    
     const[gia,setGia]=useState(0)
     const[ptram,setpTram]=useState(0)
     const[ngaybatdau,setngaybd]=useState('')
-    const[ngayketthuc,setngayketthuc]=useState('')
+    const[ngayketthuc,setngayketthuc]=useState(new Date())
     const[diaDiem_1,setdiaDiem_1]=useState([])
-   
-
+    
     const[dsloaiVoucher,setdsloaiVoucher]=useState([])
     const[dsDieuKien,setdsDieuKien]=useState([])
     const[dsDiaChi,setdsDiaChi]=useState([])
+    const [diaDiem,setdiaDiem]=useState([])
     var key=[]
+    var bd,kt,pt, partner;
+    var temp=[]
     useEffect(()=>{
-        Axios.get("http://localhost:9000/partner/list_loai").then((respone)=>{
-            setdsloaiVoucher(respone.data) 
-        })
+        Axios.post("http://localhost:9000/partner/pre_edit",{id:id}).then((respone)=>{
+            settenVoucher(respone.data[0].TenVoucher)
+            setsoLuong(respone.data[0].SoLuong)
+            setGia(respone.data[0].GiaTien)
+            setpTram(respone.data[0].GiaTriSuDung)
+        
+            // console.log(moment(respone.data[0].NgayBatDau))
+            setngaybd(respone.data[0].NgayBatDau)
+            setngayketthuc(respone.data[0].NgayKetThuc)
+        })  
+        Axios.post("http://localhost:9000/partner/pre_editdc",{id:id}).then((respone)=>{
+            respone.data.forEach(element => {
+                key.push(element.MaDiaChi)
+            });
+            
+            setdiaDiem(key)
+        })  
+
+        Axios.post("http://localhost:9000/partner/pre_editdk",{id:id}).then((respone)=>{
+            
+            
+            temp=[...respone.data]
+            setDieukien(respone.data)
+            
+            
+            
+        })  
         Axios.get("http://localhost:9000/partner/list_dk").then((respone)=>{
             setdsDieuKien(respone.data)
+            
         })
         Axios.get("http://localhost:9000/partner/list_dc").then((respone)=>{
             setdsDiaChi(respone.data)
+            
         })
         Axios.get("http://localhost:9000/partner/list_dc1").then((respone)=>{
-        
-            setdiaDiem(respone.data)
+            
+            
         })            
         
         
+        
     },[])
-    dsDiaChi.forEach(e => {
-        key.push(e.MaDiaChi)
-    });
-    console.log(key)
     
-    const onChangeDiaDiem=(checkedValues)=> {
-      
-        setdiaDiem(checkedValues)
+    const CheckboxGroup = Checkbox.Group
+    
+   
+    
+
+
+    const onChangeDiaDiem=(list)=> {
+    
+        setdiaDiem(list)
+        console.log(diaDiem)
       }
       
     const onChangeGia = (e) =>{
         const value = Number(e.target.value);
         if(!isNaN(value))
         {
+            console.log(gia)
             setGia(value);
         }
         
@@ -80,15 +117,7 @@ export default function Edit(props) {
 
 
 
-    const onChangeBd=(e)=>{
-        
-        setngaybd(e.target.value)
-
-    }
     
-    const onChangeKt=(e)=>{
-        setngayketthuc(e.target.value)
-    }
     
       const onFinishFailed = (errorInfo) => {
           
@@ -112,11 +141,11 @@ export default function Edit(props) {
     }
     const onChangeSL=(event)=>{
         
-          if(!isNaN(Number(event.target.value)))
-          {
+          
         
             setsoLuong((event.target.value))
-          }
+            console.log(soLuong)
+          
     }
     const onChangeDk = (name,index,e)=>{
 		let tempArray = [...dieukien];
@@ -140,11 +169,12 @@ export default function Edit(props) {
 
     const {RangePicker} = DatePicker;
     const onFinish = (values) => {
-        Axios.post("http://localhost:9000/partner/add",{ma:maVoucher,ten:tenVoucher,loai:values.select,sl:soLuong,dk:dieukien,dd:diaDiem,gia:gia,ptram:ptram,bd:values.ngaybd,kt:values.ngaykt,hinh:image
-        }).then((respone)=>{
-            
-        })
-        history.push("/manage")
+        Axios.post("http://localhost:9000/partner/edit",{ma:id,ten:tenVoucher,loai:values.select,sl:soLuong,dk:dieukien,dd:diaDiem,gia:gia,ptram:ptram,bd:values.ngaybd,kt:values.ngaykt,hinh:image,partner:partner
+    }).then((respone)=>{
+        
+    })
+    
+   history.push("/manage")
         
     
       };
@@ -173,12 +203,23 @@ export default function Edit(props) {
                 <Form.Item
                     name="tenVoucher"
                     rules={[
-                        { required: true, message: 'Không được bỏ trống tên voucher' },
+                        
+                        {  validator(value){
+                            if(tenVoucher=="")
+                            {
+                                return Promise.reject(new Error('Không được để trống'));
+                            }
+                            else
+                            
+                                return Promise.resolve()
+                            
+                        }},
                     ]}
                     label="Tên Voucher"
                     className="form__row"
+                    valuePropName={0}
                 >
-                    <Input  placeholder="Nhập Tên Voucher ..." onChange={onChangeTen} />
+                    <Input  placeholder="Nhập Tên Voucher ..." value={tenVoucher} onChange={onChangeTen} />
                 </Form.Item>
                 
                 
@@ -198,8 +239,9 @@ export default function Edit(props) {
                     ]}  
                     label="Số lượng"
                     className="form__row"
+                    valuePropName={0}
                 >
-                    <Input type="number"  className="form__input" placeholder="Số Lượng...."  onChange={onChangeSL}/>
+                    <Input type="number" value={soLuong} className="form__input" placeholder="Số Lượng...."  onChange={onChangeSL}/>
 
                 </Form.Item>
                 <Form.Item
@@ -225,15 +267,15 @@ export default function Edit(props) {
                             <Space direction="vertical">
                                 <Space>
                                     
-                                        <Checkbox value="A" onClick={(e)=>onChangeDk("check",0,e)}>Số đêm tối thiểu</Checkbox>  
-                                        <input type="number" id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}}  onChange={(e)=>onChangeDk("input",0,e)} disabled={!dieukien[0]['check']} />
+                                        <Checkbox value="A" checked={dieukien[0].check} onClick={(e)=>onChangeDk("check",0,e)}>Số đêm tối thiểu</Checkbox>  
+                                        <input type="number" id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}} value={dieukien[0].input}  onChange={(e)=>onChangeDk("input",0,e)} disabled={!dieukien[0]['check']} />
                                     
                                 </Space>
                                 <Space>
                                     
-                                        <Checkbox  value="A" onClick={(e)=>onChangeDk("check",1,e)}>Giá trị đơn đặt tối thiểu</Checkbox>  
+                                        <Checkbox  value="A" checked={dieukien[1].check} onClick={(e)=>onChangeDk("check",1,e)}>Giá trị đơn đặt tối thiểu</Checkbox>  
                                     
-                                        <input type="number" id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}}  onChange={(e)=>onChangeDk("input",1,e)} disabled={!dieukien[1]['check']} />
+                                        <input type="number" id="id_input_1" className="form__input"  style={{width:100},{justifySelf:'center'}} value={dieukien[1].input} onChange={(e)=>onChangeDk("input",1,e)} disabled={!dieukien[1]['check']} />
 
                                         
                                    
@@ -245,24 +287,33 @@ export default function Edit(props) {
                 <Form.Item
                     name="diadiem"
                     rules={[
-                        { required: true, message: 'Chọn ít nhất 1 địa điểm áp dụng' },
+                        { validator(){
+                            if(diaDiem=='')
+                            {
+                                return Promise.reject(new Error('Vui lòng chọn ít nhất 1 đơn vị áp dụng voucher'));
+                            }
+                            else
+                            {
+                                return Promise.resolve()
+                            }
+                        }}
                     ]}
                     label="Địa Điểm:"
                     className="form__row"
-                    valuePropName={key}
+                    valuePropName=""
                 >
-                    <Checkbox.Group onChange={onChangeDiaDiem} defaultValue={key}>
+                    
+                    
+                    <CheckboxGroup onChange={onChangeDiaDiem}  value={diaDiem}>
                         <Space direction="vertical">
                             {dsDiaChi.map((val)=>{
-                               
                                 return <Checkbox key={val.MaDiaChi} value={val.MaDiaChi} >Số {val.So}, Đường {val.TenDuong} Quận {val.TenQuan} Thành phố {val.TenTP}</Checkbox>
                             })}
                         </Space>
-                    </Checkbox.Group>
-                    
-                    
+                       
+                    </CheckboxGroup>
+                
                 </Form.Item>
-
                 
                 
 
@@ -271,7 +322,7 @@ export default function Edit(props) {
                     rules={[
                         ({ getFieldValue })=>(
                             { validator(_,value=''){
-                                if(value===0||value===null||value==='')
+                                if(gia===0||gia===null||gia==='')
                                 {
                                     return Promise.reject(new Error('Không được bỏ trống Trị Giá'));
                                 }
@@ -286,10 +337,10 @@ export default function Edit(props) {
                     ]}
                     label="Giá (VNĐ)"
                     className="form__row"
-             
+                    valuePropName={0}
                     
                 >
-                   <Input  type="number" className="form__input"   onChange={onChangeGia}/>
+                   <Input  type="number" className="form__input"   onChange={onChangeGia} value={gia}/>
                 </Form.Item>
                 <Form.Item
                     name="trigia"
@@ -317,88 +368,16 @@ export default function Edit(props) {
                         }},
                         
                     ]}
+                    valuePropName={0}
                 >
                     
-                    <Input type="number" className="form__input"  onChange={onChangeTriGia}/>
+                    <Input type="number" className="form__input"  onChange={onChangeTriGia} value={ptram}/>
                 </Form.Item>
                
-                <Form.Item
-                    name="ngaybd"
-                    
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống khoảng thời gian hiệu lực' },
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if(getFieldValue('ngaykt') != null)
-                                {
-                                    if (!value || getFieldValue('ngaykt')<=value) {
-                                        return Promise.reject(new Error('Ngày bắt đầu phải <= ngày kết thúc'));
-                                      }
-                                    
-                                    else
-                                        return Promise.resolve();
-
-                    
-                                }
-                                if(value<=today) {
-                                    return Promise.reject(new Error('Ngày bắt đầu có hiệu lực hiệu lực phải >= ngày hôm nay'));
-                                }
-                                else
-                                {
-                                    getFieldValue('ngaybd')
-                                    return Promise.resolve();
-                                }
-                            },
-                            
-                          }),
-                          
-                          
-                    ]
-                    
-                }
-                    label="Ngày bắt đầu"
-                    className="form__row"
-                >
-                   
-                    <DatePicker placeholder="Nhập Ngày Kết Thúc..." className="form__input" onClick={onChangeBd}/>
-                </Form.Item>
-                <Form.Item
-                    name="ngaykt"
-                    rules={[
-                        { required: true, message: 'Không được bỏ trống ngày kết thúc' },    
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                               
-                                if(getFieldValue('ngaybd') != null)
-                                {
-                                    if (!value || getFieldValue('ngaybd') >=value) {
-                                        return Promise.reject(new Error('Ngày kết thúc phải >= ngày bắt đầu'));
-                                      }
-                                    else if(value<=today) {
-                                        return Promise.reject(new Error('Ngày kết thúc hiệu lực phải >= ngày hôm nay'));
-                                    }
-                                    else
-                                    {
-                                       
-                                        return Promise.resolve();
-                                    }
-                                      
-                                }
-                                return Promise.resolve();
-                            },
-                          }),
-                            
-                         
-                    ]}
-                    label="Ngày Kết Thúc"
-                    className="form__row"
-                >
-                   <DatePicker placeholder="Nhập Ngày Kết Thúc..." className="form__input" onClick={onChangeKt}/>
-                </Form.Item>
                 
                 <Form.Item className="form-btn-login">
                 <Button type="primary" htmlType="submit" className="btn--them text-right btn btn-primary" >
-                Thêm
+                Sửa
                 </Button>
                 </Form.Item>
             </Form>

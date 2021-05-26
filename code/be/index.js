@@ -4,6 +4,7 @@ var path = require('path');
 
 var Customer = require('./routes/customer');
 var Partner = require("./routes/partner");
+var Test = require("./routes/login");
 var app = express();
 
 app.use(cors())
@@ -22,5 +23,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/customer', Customer);
 app.use('/partner', Partner);
-// app.use('/users', usersRouter);
+app.use('/login', Test);
 // app.use("/testAPI",testAPIRouter);

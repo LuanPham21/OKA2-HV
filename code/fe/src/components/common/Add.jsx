@@ -53,7 +53,7 @@ export default function Add() {
       
         })
     },[])
-
+    var partner
     const onChangeDiaDiem=(checkedValues)=> {
       
         setdiaDiem(checkedValues)
@@ -142,7 +142,7 @@ export default function Add() {
 
     const {RangePicker} = DatePicker;
     const onFinish = (values) => {
-        Axios.post("http://localhost:9000/partner/add",{ma:maVoucher,ten:tenVoucher,loai:values.select,sl:soLuong,dk:dieukien,dd:diaDiem,gia:gia,ptram:ptram,bd:values.ngaybd,kt:values.ngaykt,hinh:image
+        Axios.post("http://localhost:9000/partner/add",{ma:maVoucher,ten:tenVoucher,loai:values.select,sl:soLuong,dk:dieukien,dd:diaDiem,gia:gia,ptram:ptram,bd:values.ngaybd,kt:values.ngaykt,hinh:image,partner:partner
         }).then((respone)=>{
             
         })

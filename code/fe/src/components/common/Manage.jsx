@@ -15,7 +15,6 @@ export default function Manage() {
             setlist(respone.data)
         })
     },[])
-    console.log(list)
 
 
     return (
@@ -33,18 +32,15 @@ export default function Manage() {
             <table className="table  table-manage " style={{border:'0px'}}>
                 <thead className="table-primary">
                     <tr>
-                    
                     <th className="text-center" scope="col">Hình</th>
                     <th className="text-center" scope="col">Tên Voucher</th>
-                    
                     <th className="text-center" scope="col">Giá Trị</th>
                     <th className="text-center" scope="col">Giá bán</th>
-                   
                     </tr>
                 </thead>
                 <tbody>
                     {list.map((val)=>{
-                        return <Part ma={val.MaVoucher} hinh={val.Hinh} ten={val.TenVoucher}  giatri={val.GiaTriSuDung} gia={val.GiaTien} tt={val.TrangThai}></Part>
+                        return <Part key={val.MaVoucher} ma={val.MaVoucher} hinh={val.Hinh} ten={val.TenVoucher}  giatri={val.GiaTriSuDung} gia={val.GiaTien} tt={val.TrangThai}></Part>
                     })}
                     
                   

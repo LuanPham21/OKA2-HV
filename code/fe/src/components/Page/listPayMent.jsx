@@ -1,7 +1,7 @@
 import React from 'react'
 import Payment from '../common/Payment';
 import '../css/Payment.css'
-export default function listPayMent() {
+export default function listPayMent(props) {
     return (
         <div className="form-include" >
             <Payment/>

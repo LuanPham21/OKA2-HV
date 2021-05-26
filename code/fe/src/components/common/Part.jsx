@@ -46,9 +46,8 @@ export default function Part(props){
                         <form> 
                             <button type="submit" className="btn btn-warning" hidden={bool} onClick={redirect} style={{marginRight:'10px'}}>Sửa</button>
                              <button type="submit" className="btn btn-danger " hidden={bool} onClick={()=>{
-                                 Axios.post("http://localhost:9000/manage/delete",{ma:props.ma});
-                                 
-                        }} >Xóa</button>
+                                 Axios.post("http://localhost:9000/partner/delete",{ma:props.ma}); }}
+                                 >Xóa</button>
                         </form>
                         
                        

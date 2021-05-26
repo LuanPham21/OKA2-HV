@@ -1,11 +1,15 @@
 import './App.css';
-import React from 'react';
+
+
+import React, { useEffect, useState } from 'react';
+import Header_kh from './components/common/Header_kh';
+import Header_partner from './components/common/Header_partner';
 import Header from './components/common/Header';
 import Navigation from './components/common/Navigation';
 import listVoucher from './components/Page/listVoucher';
 import Detail from './components/common/Detail'
 import Edit from './components/common/Edit'
-import {Switch,Route} from 'react-router-dom'
+import {Switch,Route,Redirect} from 'react-router-dom'
 import listPayMent from './components/Page/listPayMent';
 
 import NotFoundPage from './components/common/NotFoundPage';
@@ -13,24 +17,33 @@ import Login from './components/common/Login';
 import SignIn from './components/common/SignIn';
 import Footer from './components/common/Footer';
 import Add from './components/common/Add';
+import PayMent from './components/common/Payment';
 import Manage from './components/common/Manage';
+import Test from './components/common/atest';
+import Axios from 'axios'
+
+import {useHistory} from 'react-router-dom'
+
+
 
 
 function App(){
-      
+  const [login,setLogin]=useState()
       return (
         <div className="main">
-            <Header/>
+            <PrivateHeader/>
             <Navigation/> 
             <Switch>
+                <Route path='/login' component={LoginAuth}/>
+                <Route path='/signin' component={SignIn}/>
                 <Route path='/' component={listVoucher} exact />  
                 <Route path='/detail/:id' component={Detail}/>
-                <Route path='/payment' component={listPayMent}/>
-                <Route path='/manage' component={Manage}/>
-                <Route path='/edit/:id' component={Edit}/>
-                <Route path='/add' component={Add}/>
-                <Route path='/login' component={Login}/>
-                <Route path='/signin' component={SignIn}/>
+                <PrivateRoute_1 path='/payment/:id' component={PayMent}/>
+                
+                <PrivateRoute path='/edit/:id' component={Edit}/>
+                <PrivateRoute path='/manage' component={Manage}/>
+                <PrivateRoute path='/add' component={Add}/>
+                
                 {/* <Route path='*' component={NotFoundPage}/> */}
 
             </Switch>
@@ -43,7 +56,173 @@ function App(){
       );
     }
 
+    
+    
+    
+  
+    const log=(e,type)=>{
+      sessionStorage.setItem('token', true);
+      sessionStorage.setItem('maUser', e);
+      sessionStorage.setItem('type', type);
+    }    
+    
 
+    function LoginAuth (){
+      
+      
+      return(
+        <Login  setLogin={log}/>
+      )
+      
+      
+    }
 
+    function PrivateRoute({ component: Component, ...rest }) {
+      const tokenString = sessionStorage.getItem('token');
+      const ma = sessionStorage.getItem('maUser');
+      const type = sessionStorage.getItem('type');
+      useEffect(()=>{
+        Axios.post('http://localhost:9000/partner/getma',{ma:ma})
+      },[])
+      var bool
+      if(tokenString=='true')
+      {
+        bool=true
+      }
+      else
+      {
+        bool=false
+      }
+      var dk=false
+      if(type=='partner'&&bool==true)
+      {
+        dk=true
+      }
+      return (
+        <Route
+      {...rest}
+      render={props =>
+        
+        dk ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+      );
+    }
 
-export default App;
+    function PrivateRoute_1({ component: Component, ...rest }) {
+      
+      const history = useHistory()
+      history.go(0)
+      const tokenString = sessionStorage.getItem('token');
+      const ma = sessionStorage.getItem('maUser');
+      const type = sessionStorage.getItem('type');
+      useEffect(()=>{
+        Axios.post('http://localhost:9000/customer/getma',{ma:ma})
+      },[])
+      var bool
+      if(tokenString=='true')
+      {
+        bool=true
+      }
+      else
+      {
+        bool=false
+      }
+      var dk=false
+      if(type=='kh'&&bool==true)
+      {
+        dk=true
+      }
+      useEffect(()=>{
+        if(dk==true)
+        {
+          
+        }
+        
+      },[])
+
+      return (
+        <Route
+      {...rest}
+      render={props =>
+        <Component {...props} />
+        // dk ? (
+          
+        // ) : (
+        //   <Redirect
+        //     to={{
+        //       pathname: "/login",
+        //       state: { from: props.location }
+        //     }}
+        //   />
+        // )
+      }
+    />
+      );
+    }
+
+    function PrivateHeader({  ...rest })
+    {
+      const tokenString = sessionStorage.getItem('token');
+      const type = sessionStorage.getItem('type');
+      
+      var bool
+      if(tokenString=='true')
+      {
+        bool=true
+      }
+      else
+      {
+        bool=false
+      }
+      var dk=false
+      if(type=='kh'&&bool==true)
+      {
+        dk=true
+      }
+      return (
+        <Route
+      {...rest}
+      render={props =>
+        
+        // bool ? (
+          
+        //     <Header_partner/>
+          
+        // ) : (
+          
+        //   <Header/>
+        // )
+        {if( bool==true)
+        {
+          if(type=="kh")
+          {
+            return <Header_partner></Header_partner>
+          }
+          else
+          {
+            return <Header_partner/>
+          }
+         
+        }
+        else
+        {
+          return <Header/>
+        }
+      }
+      }
+    />
+      );
+    }
+
+    export default App;
+

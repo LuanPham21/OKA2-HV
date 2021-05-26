@@ -7,6 +7,7 @@ import React,{useEffect,useState} from 'react'
 import Axios from 'axios'
 import DiaDiem from './Checkbox';
 import dateFormat from 'dateformat'
+import {useHistory} from 'react-router-dom'
 var CurrencyFormat = require('react-currency-format');
 export default function Detail(props) {
     const {id}=props.match.params;
@@ -32,6 +33,10 @@ export default function Detail(props) {
                 }
             })
     },[])    
+    const history=useHistory();
+    const redirect = () => {
+        history.push(`/payment/${id}`)
+      }
     console.log(DieuKien)
 
     return (
@@ -46,7 +51,7 @@ export default function Detail(props) {
                     </div>
                     <div className="col-lg-9">
                         
-                        <p className="detail-ten">{Detail.TenVoucher} giảm ngay {Detail.GiaTriSuDung}%</p>
+                        <p className="detail-ten">{Detail.TenVoucher} giảm {Detail.GiaTriSuDung}%</p>
                         <p className="detail-tloai">{Detail.MaLoaiVoucher}</p>
                         <p className="detail-dieukien">Hạn sử dụng:        {dateFormat(Detail.NgayBatDau, 'dd/mm/yyyy')} - {dateFormat(Detail.NgayKetThuc, 'dd/mm/yyyy')}</p>
                         <p className="detail-gia">Giá: <CurrencyFormat value={Detail.GiaTien} displayType={'text'} thousandSeparator={true} /> VNĐ</p>
@@ -57,7 +62,7 @@ export default function Detail(props) {
                             {DieuKien.map((val)=>{
                                 if(DieuKien[0]=="Không có điều kiện cho Voucher này ")
                                 {
-                                    return <p>{DieuKien[0]}</p>
+                                    return <p>Không tồn tại điều kiện cho vouhcer này</p>
                                     
                                 }
                                 else
@@ -85,7 +90,7 @@ export default function Detail(props) {
                                 return <p  style={{font:'14px'},{marginTop:'5px'}} >Số {val.So}, Đường {val.TenDuong} Quận {val.TenQuan} Thành phố {val.TenTP}</p>
                             })}
                         </Form.Item>
-                        <button type="button" className="detail-btn-mua">Mua Ngay</button>
+                        <button type="button" className="detail-btn-mua" onClick={redirect}>Mua Ngay</button>
                     </div>
                 </div>
             </div>
