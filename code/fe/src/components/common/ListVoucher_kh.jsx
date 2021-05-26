@@ -17,6 +17,7 @@ export default function ListV(props) {
     useEffect(()=>{
         Axios.post("http://localhost:9000/customer/list_kh",{ma:ma}).then((respone)=>{
             setDetail(respone.data) 
+            console.log(Detail)
         })
     },[])    
     const history=useHistory();

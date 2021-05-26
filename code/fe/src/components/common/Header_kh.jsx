@@ -32,6 +32,7 @@ export default function Header_kh() {
                 </a>
             </div>
             <div className="header-right">
+                <a href="/profile">Thông tin cá nhân </a>
                 <button className="login" onClick={onClick}> Đăng xuất</button>
             </div>
         </div>

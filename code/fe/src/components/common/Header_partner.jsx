@@ -31,10 +31,8 @@ export default function Header_partner() {
                 </a>
             </div>
             <div className="header-right">
-                <a href="/promotion">Khuyến Mãi</a>
-                <a href="/cooperate">Hợp Tác Với Chúng Tôi</a>
-                <a href="/save">Đã Lưu</a>
-                <a href="/book">Đặt Chỗ Của Tôi</a>
+                
+                <a></a>
                 <button className="login" onClick={onClick}> Đăng xuất</button>
             </div>
         </div>

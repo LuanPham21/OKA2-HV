@@ -205,7 +205,7 @@ function App(){
         {
           if(type=="kh")
           {
-            return <Header_partner></Header_partner>
+            return <Header_kh/>
           }
           else
           {
