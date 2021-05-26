@@ -14,7 +14,7 @@ export default function Voucher(state){
     return (
         <div>
             <div className="square_all" >
-                <a href={`/detailkh/${state.ma}`} className="square_link">
+                <a href={`/detailkh/${state.mamua}`} className="square_link">
                     <div className="square">
                         <div className="img">
                             <img src={state.hinh} className="square_img"/>

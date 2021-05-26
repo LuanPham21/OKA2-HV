@@ -31,7 +31,7 @@ export default function ListV(props) {
         <div>
             
              {Detail.map((val)=>{
-                 return <Voucher key={val.MaVoucher} ma={val.MaVoucher}  hinh ={val.Hinh} title ={val.TenVoucher} sdate={val.NgayBatDau} edate={val.NgayKetThuc} price={val.GiaTien} ></Voucher>
+                 return <Voucher key={val.MaVoucher} ma={val.MaVoucher} mamua={val.MaMua}  hinh ={val.Hinh} title ={val.TenVoucher} sdate={val.NgayBatDau} edate={val.NgayKetThuc} price={val.GiaTien} ></Voucher>
              })} 
         </div>
     )
