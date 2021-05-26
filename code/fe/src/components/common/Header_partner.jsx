@@ -17,6 +17,8 @@ export default function Header_partner() {
     };
     const onClick=()=>{
         sessionStorage.clear();
+        
+        history.push("/login")
         history.go(0)
         
     }

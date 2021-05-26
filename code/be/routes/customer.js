@@ -148,7 +148,7 @@ app.post("/list_kh",(req,res)=>{
 app.post("/details_kh",(req,res)=>{
 
     sql.connect(config,(err,result)=>{
-        var str_1 ="SELECT v.MaVoucher, v.NgayBatDau, v.NgayKetThuc, v.GiaTriSuDung, v.Hinh, m.SoLuong FROM MuaHang m INNER JOIN Voucher v On v.MaVoucher= m.MaVoucher Where v.TrangThai='A' AND m.MaMua= '"+req.body.ma+"' ;";
+        var str_1 ="SELECT v.MaVoucher, v.TenVoucher,v.NgayBatDau, v.NgayKetThuc, v.GiaTriSuDung, v.Hinh, m.SoLuong FROM MuaHang m INNER JOIN Voucher v On v.MaVoucher= m.MaVoucher Where v.TrangThai='A' AND m.MaMua= '"+req.body.ma+"' ;";
 
         var request_2=new sql.Request();
 

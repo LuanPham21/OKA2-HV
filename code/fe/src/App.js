@@ -64,18 +64,18 @@ function App(){
     
     
   
-    const log=(e,type)=>{
-      sessionStorage.setItem('token', true);
-      sessionStorage.setItem('maUser', e);
-      sessionStorage.setItem('type', type);
-    }    
+    
     
 
     function LoginAuth (){
       
-      
+      const log=(e,type)=>{
+        sessionStorage.setItem('token', true);
+        sessionStorage.setItem('maUser', e);
+        sessionStorage.setItem('type', type);
+      }    
       return(
-        <Login  setLogin={log}/>
+        <Login setLogin={log}/>
       )
       
       

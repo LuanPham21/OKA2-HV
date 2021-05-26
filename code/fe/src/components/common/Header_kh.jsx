@@ -17,8 +17,9 @@ export default function Header_kh() {
     };
     const onClick=()=>{
         sessionStorage.clear();
-        window.location.reload();
+        
         history.push("/login")
+        history.go(0)
         
     }
     return (

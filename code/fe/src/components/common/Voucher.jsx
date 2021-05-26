@@ -22,7 +22,7 @@ export default function Voucher(state){
                         <div className="body">
                             <h3 className="square_title" id="ten">{state.title}</h3>
                             <p className="square_desc">{dateFormat(state.sdate, 'dd/mm/yyyy')} - {dateFormat(state.edate, 'dd/mm/yyyy')}</p>
-                            <p className="square_desc">Số Lượng: {state.soluong}</p>
+                            <p className="square_desc">Số Lượng: {state.sl}</p>
                         </div>
                         
                     </div>
