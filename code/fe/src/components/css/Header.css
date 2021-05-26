@@ -36,12 +36,12 @@
 }
 .header .header-right a:hover
 {
-    color:#696969;
+    /* color:#696969; */
     opacity: 1;
 }
-.header .header-right .login{
+/* .header .header-right .login{
     color: #0770CD;
-}
+} */
 .header .header-right .register{
     background-color: #0770cd;
     padding: 14px 17px;
@@ -54,5 +54,13 @@
     background-color: #0770cd;
     opacity: 0.7;
 }
-
-
+.header .header-right .login:hover{
+    color: #fff;
+}
+.login{
+    background-color: #0770cd;
+    border: none;
+}
+.login .a:hover{
+    color: #fff;
+}

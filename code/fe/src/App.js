@@ -19,10 +19,12 @@ import Footer from './components/common/Footer';
 import Add from './components/common/Add';
 import PayMent from './components/common/Payment';
 import Manage from './components/common/Manage';
+import ListV from './components/common/ListVoucher_kh';
 
 import Axios from 'axios'
 
 import {useHistory} from 'react-router-dom'
+import Detail_damua from './components/common/Detail_damua';
 
 
 
@@ -39,6 +41,8 @@ function App(){
                 <Route path='/' component={listVoucher} exact />  
                 <Route path='/detail/:id' component={Detail}/>
                 <PrivateRoute_1 path='/payment/:id' component={PayMent}/>
+                <PrivateRoute_1 path='/detailkh/:id' component={Detail_damua}/>
+                <PrivateRoute_1 path='/profile' component={ListV}/>
                 
                 <PrivateRoute path='/edit/:id' component={Edit}/>
                 <PrivateRoute path='/manage' component={Manage}/>
@@ -120,7 +124,7 @@ function App(){
 
     function PrivateRoute_1({ component: Component, ...rest }) {
       
-      window.location.href=window.location.href
+      
       const tokenString = sessionStorage.getItem('token');
       const ma = sessionStorage.getItem('maUser');
       const type = sessionStorage.getItem('type');

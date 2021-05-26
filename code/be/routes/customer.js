@@ -120,5 +120,42 @@ app.post("/payment",(req,res)=>{
     })
     
 });
+app.get("/list_kh",(req,res)=>{
+    var a= "Voucher1"
+    sql.connect(config,(err,result)=>{
+        var update ="Update Voucher SET TrangThai ='U' WHERE  NgayKetThuc <'"+today_1+"'";
+        var request=new sql.Request();
+        request.query(update,function(err,database){ 
+        })
+        var update_2 ="Update Voucher SET TrangThai ='P' WHERE  NgayBatDau > '"+today_1+"' AND TrangThai!='U'";
+        request.query(update_2,function(err,database){ 
+        })
+        var update_1 ="Update Voucher SET TrangThai = 'A' WHERE NgayBatDau <= '"+today_1+"'AND NgayKetThuc >'"+today_1+"' AND TrangThai!='U'";
+        var request_1=new sql.Request();
+        request_1.query(update_1,function(err,database){ 
+        })
+        var str ="SELECT * FROM Voucher WHERE TrangThai='A'AND SoLuong >0 AND MaPartner= '"+req.body.ma+"'"    
+        request.query(str,function(err,database){
+            if(database!=null)
+            {
+                res.send(database.recordset)
+            }
+        })
+    }); 
+});
+app.post("/details_kh",(req,res)=>{
+
+    sql.connect(config,(err,result)=>{
+        var str_1 ="SELECT v.MaVoucher, v.NgayBatDau, v.NgayKetThuc, v.GiaTriSuDung, v.Hinh, m.SoLuong FROM MuaHang m INNER JOIN Voucher v On v.MaVoucher= m.MaVoucher Where m.MaVoucher = '"+req.body.ma+"' ;";
+
+        var request_2=new sql.Request();
+
+        request_2.query(str_1,function(err,database){ 
+
+            res.send(database.recordset[0])
+            
+        })
+    })
+});
 
 module.exports=app;

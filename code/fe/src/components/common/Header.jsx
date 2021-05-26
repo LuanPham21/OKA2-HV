@@ -28,7 +28,7 @@ export default function Header() {
                 <a href="/cooperate">Hợp Tác Với Chúng Tôi</a>
                 <a href="/save">Đã Lưu</a>  
                 <a href="/book">Đặt Chỗ Của Tôi</a>
-                <button><Link to='/login' className="login" >Đăng Nhập</Link></button>
+                <Link to='/login' className="login" >Đăng Nhập</Link>
             </div>
         </div>
     )
