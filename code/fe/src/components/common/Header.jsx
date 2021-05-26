@@ -26,9 +26,9 @@ export default function Header() {
             <div className="header-right">
                 <a href="/promotion">Khuyến Mãi</a>
                 <a href="/cooperate">Hợp Tác Với Chúng Tôi</a>
-                <a href="/save">Đã Lưu</a>
+                <a href="/save">Đã Lưu</a>  
                 <a href="/book">Đặt Chỗ Của Tôi</a>
-                <Link to='/login' className="login" >Đăng Nhập</Link>
+                <button><Link to='/login' className="login" >Đăng Nhập</Link></button>
             </div>
         </div>
     )

@@ -24,8 +24,8 @@ export default function Login(props) {
             {
                 console.log(respone.data)
                 props.setLogin(respone.data.MaKhachHang,'kh')
-                
                 history.push("/")
+                history.go(0)
             }
             
             
@@ -36,6 +36,7 @@ export default function Login(props) {
                 props.setLogin(respone.data.MaPartner,'partner')
                 
                 history.push("/manage")
+                history.go(0)
             }
             
         })

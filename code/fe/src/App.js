@@ -19,7 +19,7 @@ import Footer from './components/common/Footer';
 import Add from './components/common/Add';
 import PayMent from './components/common/Payment';
 import Manage from './components/common/Manage';
-import Test from './components/common/atest';
+
 import Axios from 'axios'
 
 import {useHistory} from 'react-router-dom'
@@ -120,13 +120,13 @@ function App(){
 
     function PrivateRoute_1({ component: Component, ...rest }) {
       
-      const history = useHistory()
-      history.go(0)
+      window.location.href=window.location.href
       const tokenString = sessionStorage.getItem('token');
       const ma = sessionStorage.getItem('maUser');
       const type = sessionStorage.getItem('type');
       useEffect(()=>{
         Axios.post('http://localhost:9000/customer/getma',{ma:ma})
+        
       },[])
       var bool
       if(tokenString=='true')
@@ -154,17 +154,12 @@ function App(){
         <Route
       {...rest}
       render={props =>
-        <Component {...props} />
-        // dk ? (
-          
-        // ) : (
-        //   <Redirect
-        //     to={{
-        //       pathname: "/login",
-        //       state: { from: props.location }
-        //     }}
-        //   />
-        // )
+        
+        dk ? (
+          <Component {...props} />
+        ) : (
+          <Login/>
+        )
       }
     />
       );
