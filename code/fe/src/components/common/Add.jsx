@@ -57,7 +57,6 @@ export default function Add() {
     const onChangeDiaDiem=(checkedValues)=> {
       
         setdiaDiem(checkedValues)
-        console.log(diaDiem)
       }
 
     const onChangeGia = (e) =>{
@@ -107,10 +106,7 @@ export default function Add() {
 
     
     
-    const onChangeLoai=(e)=>{
-        console.log(e.target.value)
-        setloaiVoucher(e.target.value)
-    }
+
     const onChangeSL=(event)=>{
         
           if(!isNaN(Number(event.target.value)))
@@ -129,7 +125,6 @@ export default function Add() {
         {
             tempArray[index] = {...tempArray[index],input:e.target.value}
         }
-        console.log(dieukien)
 		return setDieukien(tempArray)
 	}
 

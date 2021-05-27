@@ -162,24 +162,25 @@ app.post("/details_kh",(req,res)=>{
 app.post("/search",(req,res)=>{
     
     sql.connect(config,(err,result)=>{
-        
         var bd = dateFormat(req.body.ngay[0],"yyyy-mm-dd")
         var kt = dateFormat(req.body.ngay[1],"yyyy-mm-dd")
         var str
+        
         if(req.body.ngay[0]==null||req.body.ngay[0]==null)
         {
             console.log(bd)
-            str="SELECT * FROM Voucher v INNER JOIN DiaDiemApDung d On v.MaVoucher = d.MaVoucher INNER JOIN DiaChi di On d.MaDiaChi = di.MaDiaChi WHERE  di.TenTP =N'"+req.body.tp+"'"
+            str="SELECT v.MaVoucher, v.TenVoucher, v.GiaTien, v.GiaTriSuDung, v.NgayBatDau, v.NgayKetThuc, v.Hinh FROM Voucher v INNER JOIN DiaDiemApDung d On v.MaVoucher = d.MaVoucher INNER JOIN DiaChi di On d.MaDiaChi = di.MaDiaChi WHERE v.TrangThai='A'AND di.TenTP =N'"+req.body.tp+"'"
         }
         else if(req.body.tp==null)
         {
-            str = "SELECT * FROM Voucher v INNER JOIN DiaDiemApDung d On v.MaVoucher = d.MaVoucher INNER JOIN DiaChi di On d.MaDiaChi = di.MaDiaChi WHERE  v.NgayBatDau>= '"+bd+"' AND v.NgayKetThuc<= '"+kt+"'";
+            str = "SELECT v.MaVoucher, v.TenVoucher, v.GiaTien, v.GiaTriSuDung, v.NgayBatDau, v.NgayKetThuc, v.Hinh FROM Voucher v INNER JOIN DiaDiemApDung d On v.MaVoucher = d.MaVoucher INNER JOIN DiaChi di On d.MaDiaChi = di.MaDiaChi WHERE v.TrangThai='A'AND v.NgayBatDau>= '"+bd+"' AND v.NgayKetThuc<= '"+kt+"'";
         }
         else{
-            str = "SELECT * FROM Voucher v INNER JOIN DiaDiemApDung d On v.MaVoucher = d.MaVoucher INNER JOIN DiaChi di On d.MaDiaChi = di.MaDiaChi WHERE  di.TenTP =N'"+req.body.tp+"' AND v.NgayBatDau>= '"+bd+"' AND v.NgayKetThuc<= '"+kt+"'";
+            str = "SELECT v.MaVoucher, v.TenVoucher, v.GiaTien, v.GiaTriSuDung, v.NgayBatDau, v.NgayKetThuc, v.Hinh FROM Voucher v INNER JOIN DiaDiemApDung d On v.MaVoucher = d.MaVoucher INNER JOIN DiaChi di On d.MaDiaChi = di.MaDiaChi WHERE v.TrangThai='A'AND di.TenTP =N'"+req.body.tp+"' AND v.NgayBatDau>= '"+bd+"' AND v.NgayKetThuc<= '"+kt+"'";
         }
         var request_1=new sql.Request();
         request_1.query(str,function(err,database){ 
+            console.log(err)
             if(database!=null)
             {   
                 res.send(database.recordset)

@@ -11,6 +11,7 @@ import {useHistory} from 'react-router-dom'
 var CurrencyFormat = require('react-currency-format');
 export default function Detail_damua(props) {
     const {id}=props.match.params;
+    const {ma}=props.match.params;
     const [Detail,setDetail]=useState('');
     const [DiaChi,setDiaChi]=useState([]);
     const [DieuKien,setDieuKien]=useState([])
@@ -20,10 +21,10 @@ export default function Detail_damua(props) {
             console.log(respone.data.MaVoucher)
             
         })
-        Axios.post("http://localhost:9000/customer/details_dc",{ma:Detail.MaVoucher}).then((respone)=>{
+        Axios.post("http://localhost:9000/customer/details_dc",{ma:ma}).then((respone)=>{
                 setDiaChi(respone.data) 
             })  
-        Axios.post("http://localhost:9000/customer/details_dk",{ma:Detail.MaVoucher}).then((respone)=>{
+        Axios.post("http://localhost:9000/customer/details_dk",{ma:ma}).then((respone)=>{
                 
             if(!respone.data.length)
             {
@@ -65,7 +66,6 @@ export default function Detail_damua(props) {
                                 if(DieuKien[0]=="Không có điều kiện cho Voucher này ")
                                 {
                                     return <p>Không tồn tại điều kiện cho vouhcer này</p>
-                                    
                                 }
                                 else
                                 {
@@ -77,11 +77,7 @@ export default function Detail_damua(props) {
                                     {
                                         return <p  style={{font:'14px'},{marginTop:'5px'}} >Số đêm tối thiểu cần đặt: {val.GiaTri} đêm </p>
                                     }
-                                }
-                                
-                                    
-                               
-                                
+                                }                               
                             })}
                         </Form.Item>
                         <Form.Item

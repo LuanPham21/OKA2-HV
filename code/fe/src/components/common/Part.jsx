@@ -35,26 +35,38 @@ export default function Part(props){
       }
     return(
         <tr>
-            
-            <td className="text-center">
-                <img src={props.hinh} style={{width:'121px',height:'100px'}}></img>
-            </td>
-            <td className="text-center">{props.ten}</td>
-            <td className="text-center">{props.giatri}</td>
-            <td className="text-center">{props.gia}</td>
-            <td style={{maxWidth: '60px',borderTop:'none'}}>
-                        <form> 
-                            <button type="submit" className="btn btn-warning" hidden={bool} onClick={redirect} style={{marginRight:'10px'}}>Sửa</button>
-                             <button type="submit" className="btn btn-danger " hidden={bool} onClick={()=>{
-                                 Axios.post("http://localhost:9000/partner/delete",{ma:props.ma}); }}
-                                 >Xóa</button>
-                        </form>
-                        
-                       
-                    </td>
-
-      
-        </tr>
+        <td>{props.ma}</td>
+        <td style={{ wordBreak: "break-word" }}>{props.ten}</td>
+        <td>{props.sl}</td>
+        <td>{props.giatri}</td>
+        <td>{props.gia} VNĐ</td>
+        <td style={{ maxWidth: "60px" }}>
+          <form>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              hidden={bool}
+              onClick={redirect}
+              style={{ marginRight: "10px", textTransform: "uppercase" }}
+            >
+              Sửa
+            </button>
+            <button
+              type="submit"
+              className="btn btn-danger "
+              hidden={bool}
+              style={{ textTransform: "uppercase" }}
+              onClick={() => {
+                Axios.post("http://localhost:9000/partner/delete", {
+                  ma: props.ma,
+                });
+              }}
+            >
+              Xóa
+            </button>
+          </form>
+        </td>
+      </tr>
         
     )
 }

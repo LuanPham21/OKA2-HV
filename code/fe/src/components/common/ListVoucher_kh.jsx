@@ -1,4 +1,4 @@
-import '../css/Detail.css'
+import '../css/ListVoucher_kh.css'
 import { Form, Input, Button,Select, DatePicker,Checkbox} from 'antd';
 import CurrencyInput from 'react-currency-input-field';
 import DieuKien from './DieuKien';
@@ -27,15 +27,20 @@ export default function ListV(props) {
     console.log(DieuKien)
 
     return (
-        <div>
-            <div>
-                    <p>AAAAAAAAAAAAAAa</p>
+        <div className="container-fluid">
+        <div className="row">
+            <div className="col-lg-4">
+                <div className="trai_kh">
+                    <h3 className="text-center" style={{marginTop:'16px'}}>Thông Tin Cá Nhân</h3>
+                    <p className="kh_font"><b>Khách Hàng:</b> Nguyễn Hoàng Lộc</p>
+                </div>
             </div>
-            <div>
-                 {Detail.map((val)=>{
-                     return <Voucher key={val.MaVoucher} ma={val.MaVoucher} mamua={val.MaMua}  hinh ={val.Hinh} title ={val.TenVoucher} sdate={val.NgayBatDau} edate={val.NgayKetThuc} sl={val.SoLuong} ></Voucher>
-                 })} 
+            <div className="col-lg-8">
+            {Detail.map((val)=>{
+                return <Voucher key={val.MaVoucher} ma={val.MaVoucher} mamua={val.MaMua}  hinh ={val.Hinh} title ={val.TenVoucher} sdate={val.NgayBatDau} edate={val.NgayKetThuc} sl={val.SoLuong} ></Voucher>
+            })} 
             </div>
         </div>
+    </div>
     )
 }

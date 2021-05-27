@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {Link} from 'react-router-dom'
 import {} from 'antd';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, notification } from 'antd';
 import {UserOutlined,LockOutlined} from '@ant-design/icons'
 import {useHistory} from 'react-router-dom'
 import PropTypes from 'prop-types';
@@ -14,44 +14,62 @@ export default function Login(props) {
         
     },[])
     const history=useHistory();
-    const[bool,setBool]=useState(true)
+    const[bool,setBool]=useState(false)
     const onClick=()=>{
         // Axios.post('',{username:username,pass:pass})
         // history.push("/")
         // e.preventDefault();
-        var a=false
-        Axios.post('http://localhost:9000/login/login_kh',{ma:true,name:username,pass:pass}).then((respone)=>{
-            if(respone.data!="")
+        // Axios.post('http://localhost:9000/login/login_kh',{ma:true,name:username,pass:pass}).then((respone)=>{
+        //     if(respone.data!="")
+        //     {
+        //         props.setLogin(respone.data.MaKhachHang,'kh')
+        //         history.push("/") 
+        //     }
+        // })
+        // Axios.post('http://localhost:9000/login/login_partner',{ma:true,name:username,pass:pass}).then((respone)=>{
+        //     if(respone.data!="")
+        //     {
+        //         props.setLogin(respone.data.MaPartner,'partner')
+        //         history.push("/manage")
+        //     }   
+        // })  
+        
+        Axios.post('http://localhost:9000/login/login',{ma:true,name:username,pass:pass}).then((respone)=>{
+            if(respone.data!=null)
             {
-                a=true
-                props.setLogin(respone.data.MaKhachHang,'kh')
-                history.push("/")
-                history.go(0)
-            }
-            
-            
-        })
-        Axios.post('http://localhost:9000/login/login_partner',{ma:true,name:username,pass:pass}).then((respone)=>{
-            if(respone.data!="")
-            {
-               a=true 
-                props.setLogin(respone.data.MaPartner,'partner')
-                history.push("/manage")
-                history.go(0)
-            }
-            
-        })
-        if(a==false)
+                props.setLogin(respone.data.makh,respone.data.type)
+                if(respone.data.type=='kh')
+                {
+                    setBool(false)
+                    history.push("/")
+                    history.go(0)
+                }
+                else
+                {
+                    setBool(false)
+                    history.push("/manage")
+                    history.go(0)
+
+                }
+            }   
+        }) 
+
+        if(bool!=false)
         {
-            alert("Sai mat khau")
+            notification['error']({
+                message: 'Đăng nhập thất bại',
+                description:
+                  'Vui lòng nhập lại tên đăng nhập, mật khẩu',
+              });
         }
-        
-        
+
         
     }
     const onChangeName=(e)=>{
         setUsername(e.target.value)
     }
+
+    
     const onChangePass=(e)=>{
         setPass(e.target.value)
     }
@@ -106,5 +124,6 @@ export default function Login(props) {
 }
 
 Login.propTypes = {
-    setLogin: PropTypes.func.isRequired
+    setLogin: PropTypes.func.isRequired,
+    setNoti: PropTypes.func.isRequired
   };

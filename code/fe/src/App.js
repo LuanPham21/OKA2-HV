@@ -1,5 +1,6 @@
 import './App.css';
 
+import { Form, Input, Button, notification } from 'antd';
 
 import React, { useEffect, useState } from 'react';
 import Header_kh from './components/common/Header_kh';
@@ -36,12 +37,12 @@ function App(){
             <PrivateHeader/>
             <Navigation/> 
             <Switch>
-                <Route path='/login' component={LoginAuth}/>
+                <PrivateRoute_2 path='/login' component={LoginAuth}/>
                 <Route path='/signin' component={SignIn}/>
                 <Route path='/' component={listVoucher} exact />  
                 <Route path='/detail/:id' component={Detail}/>
                 <PrivateRoute_1 path='/payment/:id' component={PayMent}/>
-                <PrivateRoute_1 path='/detailkh/:id' component={Detail_damua}/>
+                <PrivateRoute_1 path='/detailkh/:id/:ma' component={Detail_damua}/>
                 <PrivateRoute_1 path='/profile' component={ListV}/>
                 
                 <PrivateRoute path='/edit/:id' component={Edit}/>
@@ -73,9 +74,13 @@ function App(){
         sessionStorage.setItem('token', true);
         sessionStorage.setItem('maUser', e);
         sessionStorage.setItem('type', type);
+        
       }    
+      const noti=(type)=>{
+        
+      }
       return(
-        <Login setLogin={log}/>
+        <Login setLogin={log} />
       )
       
       
@@ -175,6 +180,9 @@ function App(){
 
     function PrivateHeader({  ...rest })
     {
+      const history=useHistory()
+      
+      
       const tokenString = sessionStorage.getItem('token');
       const type = sessionStorage.getItem('type');
       
@@ -227,5 +235,57 @@ function App(){
       );
     }
 
+    function PrivateRoute_2({ component: Component, ...rest }) {
+      const tokenString = sessionStorage.getItem('token');
+      const ma = sessionStorage.getItem('maUser');
+      const type = sessionStorage.getItem('type');
+      
+      var bool
+      if(tokenString=='true')
+      {
+        bool=true
+      }
+      else
+      {
+        bool=false
+      }
+      
+      return (
+        <Route
+      {...rest}
+      render={props =>
+        
+        {if( bool==true)
+          {
+            if(type=="kh")
+            {
+              return <Redirect
+              to={{
+                pathname: "/",
+                state: { from: props.location }
+              }}
+            />
+            }
+            else
+            {
+              return <Redirect
+              to={{
+                pathname: "/manage",
+                state: { from: props.location }
+              }}
+            />
+            }
+          
+          }
+          else
+          {
+            return <Component {...props} />
+          }
+        }
+        
+      }
+    />
+      );
+    }
     export default App;
 

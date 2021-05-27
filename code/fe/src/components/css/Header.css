@@ -60,6 +60,8 @@
 .login{
     background-color: #0770cd;
     border: none;
+    padding: 12px;
+    color:#fff;
 }
 .login .a:hover{
     color: #fff;

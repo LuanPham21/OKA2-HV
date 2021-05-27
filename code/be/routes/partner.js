@@ -112,6 +112,7 @@ app.post("/add",(req,res)=>{
             console.log(err)
         })
         console.log(req.body.dk)
+        console.log(req.body.ma)
         var input
         if(req.body.dk[0].check==true)
         {
@@ -134,6 +135,7 @@ app.post("/add",(req,res)=>{
             count++;
             var diadiem="INSERT INTO DiaDiemApDung (MaCT_Voucher,MaVoucher,MaDiaChi) Values('"+req.body.ma+count+"', '"+req.body.ma+"', '"+e+"' )"
             request_1.query(diadiem,function(err,database){ 
+                console.log(err)
             })
         });      
     })
@@ -208,9 +210,9 @@ app.post("/pre_editdk",(req,res)=>{
 
 app.post("/edit",(req,res)=>{
     sql.connect(config,(err,result)=>{
-        
-        var sl=Number(req.body.sl)
         console.log(req.body.ma)
+        var mav=req.body.ma
+        var sl=Number(req.body.sl)
         var ptram=Number(req.body.ptram)
         var gia=req.body.gia
         var str = "UPDATE Voucher SET TenVoucher= N'"+req.body.ten+"', SoLuong= "+sl+", GiaTriSuDung= "+ptram+", GiaTien= "+gia+", Hinh= '"+req.body.hinh+"'  WHERE MaVoucher = '"+req.body.ma+"'";
@@ -229,27 +231,29 @@ app.post("/edit",(req,res)=>{
         {
             input=Number(req.body.dk[0].input)
             console.log(req.body.dk[0])
-            var str_1="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"A"+"', '"+req.body.ma+"', 'A ', "+input+")";
+            var str_1="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"A"+"', '"+ma+"', 'A ', "+input+")";
             console.log(req.body.ma+"A")
             console.log(req.body.ma)
-            console.log(input)
             request_1.query(str_1,function(err,database){ 
                 // console.log(err)
+                console.log(err)
             })
         }
         if(req.body.dk[1].check==true)
         {
+            
             input=Number(req.body.dk[1].input)
-            console.log(input)
-            var str_2="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"B"+"', '"+req.body.ma+"', 'B ', "+input+")";
+            var str_2="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"B"+"', '"+ma+"', 'B ', "+input+")";
             request_1.query(str_2,function(err,database){ 
                 // console.log(err)
+              
             })
         }
         var count =0;
         req.body.dd.forEach(e => {
             count++;
-            var diadiem="INSERT INTO DiaDiemApDung (MaCT_Voucher,MaVoucher,MaDiaChi) Values('"+req.body.ma+count+"', '"+req.body.ma+"', '"+e+"' )"
+            console.log(ma+count)
+            var diadiem="INSERT INTO DiaDiemApDung (MaCT_Voucher,MaVoucher,MaDiaChi) Values('"+ma+count+"', '"+ma+"', '"+e+"' )"
             request_1.query(diadiem,function(err,database){ 
                 // console.log(err)
             })

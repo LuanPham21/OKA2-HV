@@ -58,7 +58,7 @@ export default function ListVoucher() {
       const onClick=()=>{
         Axios.post("http://localhost:9000/customer/search",{tp:search,ngay:date}).then((respone)=>{
             setlistt(respone.data)
-            console.log("A")
+            console.log(listtt)
         })
       }
       const onChange=(value)=>{
