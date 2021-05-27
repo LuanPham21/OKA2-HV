@@ -1,6 +1,6 @@
 var config = {
-    server: 'LAPTOP-32R6HKKQ',
-    authentication: { type: 'default',options:{ userName: 'sa',password:'d18112000'}},
+    server: 'DESKTOP-FL24PF5',
+    authentication: { type: 'default',options:{ userName: 'hoangloc',password:'123456'}},
     database:"QLVoucher",
     options: { encrypt:false,"enableArithAbort": true, port: 1433 }
 }
