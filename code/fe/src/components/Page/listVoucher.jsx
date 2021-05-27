@@ -70,7 +70,7 @@ export default function ListVoucher() {
       
     return (
         <div>
-            <Slider/>
+            {/* <Slider/> */}
             <div className="form-control">
             <div className="form-left">
                 <ul className="select-items">
