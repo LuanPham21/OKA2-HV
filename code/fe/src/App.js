@@ -162,7 +162,11 @@ function App(){
         dk ? (
           <Component {...props} />
         ) : (
-          <Login/>
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}/>
         )
       }
     />

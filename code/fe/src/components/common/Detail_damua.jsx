@@ -18,22 +18,22 @@ export default function Detail_damua(props) {
         Axios.post("http://localhost:9000/customer/details_kh",{ma:id}).then((respone)=>{
             setDetail(respone.data) 
             console.log(respone.data.MaVoucher)
-            Axios.post("http://localhost:9000/customer/details_dc",{ma:respone.data.MaVoucher}).then((respone)=>{
+            
+        })
+        Axios.post("http://localhost:9000/customer/details_dc",{ma:Detail.MaVoucher}).then((respone)=>{
                 setDiaChi(respone.data) 
             })  
-            Axios.post("http://localhost:9000/customer/details_dk",{ma:respone.data.MaVoucher}).then((respone)=>{
+        Axios.post("http://localhost:9000/customer/details_dk",{ma:Detail.MaVoucher}).then((respone)=>{
                 
-                if(!respone.data.length)
-                {
-                    setDieuKien([...DieuKien,"Không có điều kiện cho Voucher này "])
-                }
-                else
-                {
-                    setDieuKien(respone.data)
-                }
+            if(!respone.data.length)
+            {
+                setDieuKien([...DieuKien,"Không có điều kiện cho Voucher này "])
+            }
+            else
+            {
+                setDieuKien(respone.data)
+            }
             })
-        })
-        
     },[])    
     const history=useHistory();
     const redirect = () => {
