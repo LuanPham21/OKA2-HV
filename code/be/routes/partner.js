@@ -41,7 +41,7 @@ app.get("/list",(req,res)=>{
         var str ="SELECT * from Voucher  Where TrangThai = 'A' OR TrangThai='P' "    
         request.query(str,function(err,database){
             
-            
+                console.log(err)
                 res.send(database.recordset)
             
                 
@@ -101,43 +101,54 @@ app.get("/list_dk",(req,res)=>{
 
 app.post("/add",(req,res)=>{
     sql.connect(config,(err,result)=>{
+        var input
         var bd = dateFormat(req.body.bd,"yyyy-mm-dd")
         var kt = dateFormat(req.body.kt,"yyyy-mm-dd")
         var sl=Number(req.body.sl)
         var ptram=Number(req.body.ptram)
+        var trangthai
+        if(bd>today_1)
+        {
+            trangthai = "P"
+        }
+        else
+        {
+            trangthai="A"
+        }
         var gia=req.body.gia
-        var str = "INSERT INTO Voucher (MaVoucher, TenVoucher, SoLuong, NgayBatDau, NgayKetThuc, GiaTriSuDung, GiaTien, Hinh, TrangThai, MaPartner) Values('"+req.body.ma+"', N'"+req.body.ten+"', "+sl+" , '"+bd+"', '"+kt+"',  "+ptram+", "+gia+", '"+req.body.hinh+"', 'P', '"+maPartner+"')";
+        var str = "INSERT INTO Voucher (MaVoucher, TenVoucher, SoLuong, NgayBatDau, NgayKetThuc, GiaTriSuDung, GiaTien, Hinh, TrangThai, MaPartner) Values('"+req.body.ma+"', N'"+req.body.ten+"', "+sl+" , '"+bd+"', '"+kt+"',  "+ptram+", "+gia+", '"+req.body.hinh+"', '"+trangthai+"', '"+maPartner+"')";
         var request_1=new sql.Request();
         request_1.query(str,function(err,database){ 
             console.log(err)
-        })
-        console.log(req.body.dk)
-        console.log(req.body.ma)
-        var input
-        if(req.body.dk[0].check==true)
-        {
+            if(req.body.dk[0].check==true)
+            {
             input= Number(req.body.dk[0].input)
             console.log(input)
             var str_1="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"A"+"', '"+req.body.ma+"', 'A', "+input+")";
             request_1.query(str_1,function(err,database){ 
                 console.log(err)
             })
-        }
-        if(req.body.dk[1].check==true)
-        {
-            input= Number(req.body.dk[1].input)
-            var str_2="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"B"+"', '"+req.body.ma+"', 'B', "+input+")";
-            request_1.query(str_2,function(err,database){ 
+            }
+            if(req.body.dk[1].check==true)
+            {
+                input= Number(req.body.dk[1].input)
+                var str_2="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"B"+"', '"+req.body.ma+"', 'B', "+input+")";
+                request_1.query(str_2,function(err,database){ 
+                })
+            }
+            var count =0;
+            req.body.dd.forEach(e => {
+                count++;
+                var diadiem="INSERT INTO DiaDiemApDung (MaCT_Voucher,MaVoucher,MaDiaChi) Values('"+req.body.ma+count+"', '"+req.body.ma+"', '"+e+"' )"
+                request_1.query(diadiem,function(err,database){ 
+                    console.log(err)
+                })
+            });      
             })
-        }
-        var count =0;
-        req.body.dd.forEach(e => {
-            count++;
-            var diadiem="INSERT INTO DiaDiemApDung (MaCT_Voucher,MaVoucher,MaDiaChi) Values('"+req.body.ma+count+"', '"+req.body.ma+"', '"+e+"' )"
-            request_1.query(diadiem,function(err,database){ 
-                console.log(err)
-            })
-        });      
+            console.log(req.body.dk)
+            console.log(req.body.ma)
+        
+        
     })
 })
 app.post("/pre_edit",(req,res)=>{
@@ -231,7 +242,7 @@ app.post("/edit",(req,res)=>{
         {
             input=Number(req.body.dk[0].input)
             console.log(req.body.dk[0])
-            var str_1="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"A"+"', '"+ma+"', 'A ', "+input+")";
+            var str_1="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"A"+"', '"+mav+"', 'A ', "+input+")";
             console.log(req.body.ma+"A")
             console.log(req.body.ma)
             request_1.query(str_1,function(err,database){ 
@@ -243,7 +254,7 @@ app.post("/edit",(req,res)=>{
         {
             
             input=Number(req.body.dk[1].input)
-            var str_2="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"B"+"', '"+ma+"', 'B ', "+input+")";
+            var str_2="INSERT INTO DieuKien (MaDieuKien, MaVoucher, LoaiDieuKien, GiaTri) Values('"+req.body.ma+"B"+"', '"+mav+"', 'B ', "+input+")";
             request_1.query(str_2,function(err,database){ 
                 // console.log(err)
               
@@ -252,8 +263,8 @@ app.post("/edit",(req,res)=>{
         var count =0;
         req.body.dd.forEach(e => {
             count++;
-            console.log(ma+count)
-            var diadiem="INSERT INTO DiaDiemApDung (MaCT_Voucher,MaVoucher,MaDiaChi) Values('"+ma+count+"', '"+ma+"', '"+e+"' )"
+            
+            var diadiem="INSERT INTO DiaDiemApDung (MaCT_Voucher,MaVoucher,MaDiaChi) Values('"+mav+count+"', '"+mav+"', '"+e+"' )"
             request_1.query(diadiem,function(err,database){ 
                 // console.log(err)
             })

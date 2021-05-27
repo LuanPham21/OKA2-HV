@@ -42,7 +42,7 @@ app.post("/login",(req,res)=>{
         }
         var request=new sql.Request();
         request.query(str,function(err,database){ 
-            if(database.recordset[0]!=null)
+            if(database.rowsAffected[0]!=0)
             {
                 console.log(err)
                 console.log(database.recordset[0].MaKhachHang)
@@ -53,7 +53,8 @@ app.post("/login",(req,res)=>{
             }
         })
         request.query(str_1,function(err,database){ 
-            if(database.recordset[0]!=null)
+            console.log(database)
+            if(database.rowsAffected[0]!=0)
             {
                 console.log(database)
                 console.log(database.recordset[0])
@@ -71,7 +72,7 @@ app.post("/login_partner",(req,res)=>{
         var str_1 ="SELECT MaPartner FROM Partner WHERE UserName ='"+req.body.name+"' AND Password ='"+req.body.pass+"'";
         var request=new sql.Request();
         request.query(str_1,function(err,database){ 
-            if(database.recordset[0]!=[])
+            if(database.recordset[0]!=null)
             {
                 console.log(database)
                 console.log(database.recordset[0])
