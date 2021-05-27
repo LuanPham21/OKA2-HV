@@ -27,12 +27,15 @@ export default function ListV(props) {
     console.log(DieuKien)
 
     return (
-        
         <div>
-            
-             {Detail.map((val)=>{
-                 return <Voucher key={val.MaVoucher} ma={val.MaVoucher} mamua={val.MaMua}  hinh ={val.Hinh} title ={val.TenVoucher} sdate={val.NgayBatDau} edate={val.NgayKetThuc} sl={val.SoLuong} ></Voucher>
-             })} 
+            <div>
+                    <p>AAAAAAAAAAAAAAa</p>
+            </div>
+            <div>
+                 {Detail.map((val)=>{
+                     return <Voucher key={val.MaVoucher} ma={val.MaVoucher} mamua={val.MaMua}  hinh ={val.Hinh} title ={val.TenVoucher} sdate={val.NgayBatDau} edate={val.NgayKetThuc} sl={val.SoLuong} ></Voucher>
+                 })} 
+            </div>
         </div>
     )
 }

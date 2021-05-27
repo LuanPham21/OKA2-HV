@@ -268,7 +268,22 @@ app.post("/delete",(req,res)=>{
     
 });
 
-
+app.post("/search",(req,res)=>{
+    
+    sql.connect(config,(err,result)=>{
+        
+        var str = "SELECT * FROM Voucher WHERE TenVoucher LIKE'%"+req.body.ma+"%' AND (TrangThai = 'A' OR TrangThai='P' )";
+        var request_1=new sql.Request();
+        request_1.query(str,function(err,database){ 
+            if(database!=null)
+            {
+                res.send(database.recordset)
+            }
+            
+        })
+    })
+    
+});
 
 
 

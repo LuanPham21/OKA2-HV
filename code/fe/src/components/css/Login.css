@@ -18,6 +18,9 @@
 /* .form-input{
     min-width: 30% !important;
 } */
+.header_1{
+    margin-top: 20px;
+}
 .ant-form-item-control-input-content{
     max-width: 80% !important;
     margin: 0 auto;
@@ -61,5 +64,6 @@
     
 }
 .form-register:hover{
+    margin-top: 0;
     opacity:0.8
 }

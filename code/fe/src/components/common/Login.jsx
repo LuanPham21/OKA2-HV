@@ -14,15 +14,16 @@ export default function Login(props) {
         
     },[])
     const history=useHistory();
-
+    const[bool,setBool]=useState(true)
     const onClick=()=>{
         // Axios.post('',{username:username,pass:pass})
         // history.push("/")
         // e.preventDefault();
+        var a=false
         Axios.post('http://localhost:9000/login/login_kh',{ma:true,name:username,pass:pass}).then((respone)=>{
             if(respone.data!="")
             {
-                console.log(respone.data)
+                a=true
                 props.setLogin(respone.data.MaKhachHang,'kh')
                 history.push("/")
                 history.go(0)
@@ -33,14 +34,17 @@ export default function Login(props) {
         Axios.post('http://localhost:9000/login/login_partner',{ma:true,name:username,pass:pass}).then((respone)=>{
             if(respone.data!="")
             {
+               a=true 
                 props.setLogin(respone.data.MaPartner,'partner')
-                
                 history.push("/manage")
                 history.go(0)
             }
             
         })
-        
+        if(a==false)
+        {
+            alert("Sai mat khau")
+        }
         
         
         
@@ -60,12 +64,13 @@ export default function Login(props) {
                 // initialValues={{ remember: true }}
                 // onFinish={onFinish}
                 >
-                    <h1>Đăng Nhập</h1>
+                    <h2 className="header_1">Đăng Nhập</h2>
 
                     <Form.Item
                         name="username"
                         rules={[
                             { required: true, message: 'Không được để trống tài khoản' },
+                           
                             
                         ]}
                         style={{maxWidth:'10% !important'}}
